@@ -1,6 +1,11 @@
 package com.c9pay.storeservice.controller;
 
-import com.c9pay.storeservice.dto.*;
+import com.c9pay.storeservice.dto.product.ProductDetailList;
+import com.c9pay.storeservice.dto.product.ProductDetails;
+import com.c9pay.storeservice.dto.product.ProductForm;
+import com.c9pay.storeservice.dto.sale.PaymentInfo;
+import com.c9pay.storeservice.dto.sale.ProductSaleInfo;
+import com.c9pay.storeservice.dto.sale.PurchaseInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +17,7 @@ import java.util.List;
 @RequestMapping("/{store-id}/product")
 public class ProductApiController {
     @GetMapping
-    public ResponseEntity<List<ProductDetails>> getProducts(
+    public ResponseEntity<ProductDetailList> getProducts(
             @PathVariable("store-id") int storeId
     ) {
         // todo Product 조회 로직 작성
@@ -22,11 +27,11 @@ public class ProductApiController {
                 new ProductDetails(3L, "Item3", 3000)
         );
 
-        return ResponseEntity.ok(productDetailsList);
+        return ResponseEntity.ok(new ProductDetailList(productDetailsList));
     }
 
     @PostMapping
-    public ResponseEntity<List<ProductDetails>> addProducts(
+    public ResponseEntity<ProductDetailList> addProducts(
             @PathVariable("store-id") int storeId,
             @RequestBody ProductForm productForm
     ) {
@@ -39,7 +44,7 @@ public class ProductApiController {
                 new ProductDetails(4L, productForm.getName(), productForm.getPrice())
         );
 
-        return ResponseEntity.ok(productDetailsList);
+        return ResponseEntity.ok(new ProductDetailList(productDetailsList));
     }
 
     @PostMapping("/sale")

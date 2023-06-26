@@ -1,4 +1,4 @@
-package com.c9pay.storeservice.dto;
+package com.c9pay.storeservice.dto.sale;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDetails {
-    private long id;
-    private String name;
-    private int price;
+public class ProductPurchaseInfo {
+    private long productId;
+    private int amount;
 }

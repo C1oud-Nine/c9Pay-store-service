@@ -1,7 +1,8 @@
 package com.c9pay.storeservice.controller;
 
-import com.c9pay.storeservice.dto.StoreDetails;
-import com.c9pay.storeservice.dto.StoreForm;
+import com.c9pay.storeservice.dto.store.StoreDetailList;
+import com.c9pay.storeservice.dto.store.StoreDetails;
+import com.c9pay.storeservice.dto.store.StoreForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,7 @@ import java.util.List;
 @RequestMapping("/store")
 public class StoreController {
     @GetMapping
-    public ResponseEntity<List<StoreDetails>> getStores() {
+    public ResponseEntity<StoreDetailList> getStores() {
         // todo Store 목록 조회 작성
         List<StoreDetails> storeDetailsList = List.of(
                 new StoreDetails(1L, "store1"),
@@ -21,11 +22,11 @@ public class StoreController {
                 new StoreDetails(3L, "store3")
         );
 
-        return ResponseEntity.ok(storeDetailsList);
+        return ResponseEntity.ok(new StoreDetailList(storeDetailsList));
     }
 
     @PostMapping
-    public ResponseEntity<List<StoreDetails>> addStores(@RequestBody StoreForm storeForm) {
+    public ResponseEntity<StoreDetailList> addStores(@RequestBody StoreForm storeForm) {
         // todo 가게 추가 로직 작성
         log.info("storeForm: {}", storeForm);
         List<StoreDetails> storeDetailsList = List.of(
@@ -35,6 +36,6 @@ public class StoreController {
                 new StoreDetails(4L, storeForm.getName())
         );
 
-        return ResponseEntity.ok(storeDetailsList);
+        return ResponseEntity.ok(new StoreDetailList(storeDetailsList));
     }
 }

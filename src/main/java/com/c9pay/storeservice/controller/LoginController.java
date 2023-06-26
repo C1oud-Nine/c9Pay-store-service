@@ -1,6 +1,6 @@
 package com.c9pay.storeservice.controller;
 
-import com.c9pay.storeservice.dto.StoreDetails;
+import com.c9pay.storeservice.dto.store.StoreDetails;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
