@@ -1,0 +1,23 @@
+### 상품 조회
+GET {{store-api}}/1/product
+
+### 상품 추가
+POST {{store-api}}/1/product
+Content-Type: application/json
+
+{
+  "name": "Item4", "price": 4000
+}
+
+### 상품 판매
+POST {{store-api}}/1/product/sale
+Content-Type: application/json
+
+{
+  "qrId": "498043ea-142c-11ee-be56-0242ac120002",
+  "purchaseList": [
+    {"productId":  1, "amount": 2},
+    {"productId":  2, "amount": 1},
+    {"productId":  3, "amount": 2}
+  ]
+}
