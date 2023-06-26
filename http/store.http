@@ -1,0 +1,10 @@
+### 1. 가게 조회
+GET {{store-api}}/store
+
+### 2. 가게 등록
+POST {{store-api}}/store
+Content-Type: application/json
+
+{
+  "name": "test"
+}

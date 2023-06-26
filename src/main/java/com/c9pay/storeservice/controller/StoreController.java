@@ -25,8 +25,9 @@ public class StoreController {
     }
 
     @PostMapping
-    public ResponseEntity<List<StoreDetails>> addStores(@ModelAttribute StoreForm storeForm) {
+    public ResponseEntity<List<StoreDetails>> addStores(@RequestBody StoreForm storeForm) {
         // todo 가게 추가 로직 작성
+        log.info("storeForm: {}", storeForm);
         List<StoreDetails> storeDetailsList = List.of(
                 new StoreDetails(1L, "store1"),
                 new StoreDetails(2L, "store2"),
