@@ -10,5 +10,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QRInfo {
-    private UUID qrId;
+    private String certificate;
+    private String content;
 }
