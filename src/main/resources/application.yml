@@ -17,3 +17,8 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: info
+
+jwt:
+  service-type: store
+  secret: REVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVA==
+  token-validity-in-seconds: 86400 # 24시간
