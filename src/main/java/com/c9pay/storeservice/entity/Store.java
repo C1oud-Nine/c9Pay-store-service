@@ -1,5 +1,6 @@
 package com.c9pay.storeservice.entity;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
