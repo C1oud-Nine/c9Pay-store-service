@@ -17,6 +17,7 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: info
+    com.c9pay.storeservice: debug
 
 jwt:
   service-type: store

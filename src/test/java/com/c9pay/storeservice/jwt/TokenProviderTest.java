@@ -1,5 +1,6 @@
-package jwt;
+package com.c9pay.storeservice.jwt;
 
+import com.c9pay.storeservice.jwt.TokenProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,7 +14,7 @@ import static org.mockito.Mockito.mock;
 
 class TokenProviderTest {
     final String secretKey = "REVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVA==";
-    final String serviceType = "store";
+    final String serviceType = "user";
     @Test
     void 토큰생성테스트() {
         // given
@@ -23,7 +24,7 @@ class TokenProviderTest {
         TokenProvider tokenProvider = new TokenProvider(secretKey, serviceType, tokenValidityInSeconds);
 
         // when
-        String token = tokenProvider.createToken(auth);
+        String token = tokenProvider.createToken(auth, "1234");
         System.out.println(token);
         Authentication authentication = tokenProvider.getAuthentication(token);
 
@@ -40,12 +41,12 @@ class TokenProviderTest {
         long tokenValidityInSeconds = 1;
         TokenProvider tokenProvider = new TokenProvider(secretKey, serviceType, tokenValidityInSeconds);
 
-        String token = tokenProvider.createToken(auth);
+        String token = tokenProvider.createToken(auth, "1234");
         System.out.println(token);
 
         // when
         sleep(1500);
-        boolean isValid = tokenProvider.validateToken(token);
+        boolean isValid = tokenProvider.validateToken(token, mock());
 
         // then
         assertFalse(isValid);
@@ -64,8 +65,8 @@ class TokenProviderTest {
         TokenProvider storeTokenProvider = new TokenProvider(secretKey, serviceType, tokenValidityInSeconds);
         TokenProvider userTokenProvider = new TokenProvider(userSecret, "user", tokenValidityInSeconds);
 
-        String storeToken = storeTokenProvider.createToken(storeAuth);
-        String userToken = userTokenProvider.createToken(userAuth);
+        String storeToken = storeTokenProvider.createToken(storeAuth, "1234");
+        String userToken = userTokenProvider.createToken(userAuth, "1234");
         System.out.println("store: " + storeToken);
         System.out.println("user: " + userToken);
 
