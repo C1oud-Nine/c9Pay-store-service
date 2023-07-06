@@ -1,10 +1,12 @@
 ### 가게 조회
 GET {{store-api}}/store
+Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODYzNjYwOH0._EIcdSmkgn3guTJRGc_TzksCwxbAiv53vo7dbFDuVFN1oJErtac1IMCVDrxLglGPOf7bIrGkzJwp1ZXC8Kxj4g
 
 ### 가게 등록
 POST {{store-api}}/store
 Content-Type: application/json
+Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODYzNjYwOH0._EIcdSmkgn3guTJRGc_TzksCwxbAiv53vo7dbFDuVFN1oJErtac1IMCVDrxLglGPOf7bIrGkzJwp1ZXC8Kxj4g
 
 {
-  "name": "test"
+  "name": "test4"
 }

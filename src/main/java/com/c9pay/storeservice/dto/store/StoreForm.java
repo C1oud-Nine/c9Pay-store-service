@@ -10,6 +10,5 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StoreForm {
-    private UUID userId;
     private String name;
 }
