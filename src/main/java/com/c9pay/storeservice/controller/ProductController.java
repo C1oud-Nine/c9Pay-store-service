@@ -6,6 +6,9 @@ import com.c9pay.storeservice.dto.product.ProductForm;
 import com.c9pay.storeservice.dto.sale.PaymentInfo;
 import com.c9pay.storeservice.dto.sale.ProductSaleInfo;
 import com.c9pay.storeservice.dto.sale.PurchaseInfo;
+import com.c9pay.storeservice.service.ProductService;
+import com.c9pay.storeservice.service.StoreService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +17,16 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/{store-id}/product")
 public class ProductController {
+    private final ProductService productService;
     @GetMapping
     public ResponseEntity<ProductDetailList> getProducts(
-            @PathVariable("store-id") int storeId
+            @PathVariable("store-id") Long storeId
     ) {
-        // todo Product 조회 로직 작성
-        List<ProductDetails> productDetailsList = List.of(
-                new ProductDetails(1L, "Item1", 1000),
-                new ProductDetails(2L, "Item2", 2000),
-                new ProductDetails(3L, "Item3", 3000)
-        );
+        List<ProductDetails> productDetailsList =
+                productService.getProductDetailsByStoreId(storeId);
 
         return ResponseEntity.ok(new ProductDetailList(productDetailsList));
     }
@@ -35,7 +36,6 @@ public class ProductController {
             @PathVariable("store-id") int storeId,
             @RequestBody ProductForm productForm
     ) {
-        // todo Product 등록 로직 작성
         // todo Product 조회 로직 작성
         List<ProductDetails> productDetailsList = List.of(
                 new ProductDetails(1L, "Item1", 1000),
