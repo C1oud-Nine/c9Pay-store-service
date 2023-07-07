@@ -1,12 +1,14 @@
 ### 상품 조회
 GET {{store-api}}/1/product
+Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODYzNjYwOH0._EIcdSmkgn3guTJRGc_TzksCwxbAiv53vo7dbFDuVFN1oJErtac1IMCVDrxLglGPOf7bIrGkzJwp1ZXC8Kxj4g
 
 ### 상품 추가
 POST {{store-api}}/1/product
 Content-Type: application/json
+Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODYzNjYwOH0._EIcdSmkgn3guTJRGc_TzksCwxbAiv53vo7dbFDuVFN1oJErtac1IMCVDrxLglGPOf7bIrGkzJwp1ZXC8Kxj4g
 
 {
-  "name": "Item4", "price": 4000
+  "name": "Item6", "price": 4000
 }
 
 ### 상품 판매

@@ -6,14 +6,18 @@ import com.c9pay.storeservice.dto.product.ProductForm;
 import com.c9pay.storeservice.dto.sale.PaymentInfo;
 import com.c9pay.storeservice.dto.sale.ProductSaleInfo;
 import com.c9pay.storeservice.dto.sale.PurchaseInfo;
+import com.c9pay.storeservice.entity.Store;
 import com.c9pay.storeservice.service.ProductService;
 import com.c9pay.storeservice.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -21,10 +25,18 @@ import java.util.List;
 @RequestMapping("/{store-id}/product")
 public class ProductController {
     private final ProductService productService;
+    private final StoreService storeService;
     @GetMapping
     public ResponseEntity<ProductDetailList> getProducts(
+            @RequestAttribute UUID userId,
             @PathVariable("store-id") Long storeId
     ) {
+        Optional<Store> storeOptional = storeService.findStore(storeId);
+
+        // 가게 검증
+        if (storeOptional.isEmpty() || !storeOptional.get().getUserId().equals(userId))
+            return ResponseEntity.badRequest().build();
+
         List<ProductDetails> productDetailsList =
                 productService.getProductDetailsByStoreId(storeId);
 
@@ -33,16 +45,19 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDetailList> addProducts(
-            @PathVariable("store-id") int storeId,
+            @RequestAttribute UUID userId,
+            @PathVariable("store-id") Long storeId,
             @RequestBody ProductForm productForm
     ) {
-        // todo Product 조회 로직 작성
-        List<ProductDetails> productDetailsList = List.of(
-                new ProductDetails(1L, "Item1", 1000),
-                new ProductDetails(2L, "Item2", 2000),
-                new ProductDetails(3L, "Item3", 3000),
-                new ProductDetails(4L, productForm.getName(), productForm.getPrice())
-        );
+        Optional<Store> storeOptional = storeService.findStore(storeId);
+
+        // 가게 검증
+        if (storeOptional.isEmpty() || !storeOptional.get().getUserId().equals(userId))
+            return ResponseEntity.badRequest().build();
+
+        productService.saveProduct(productForm.getName(), productForm.getPrice(), storeOptional.get());
+
+        List<ProductDetails> productDetailsList = productService.getProductDetailsByStoreId(storeId);
 
         return ResponseEntity.ok(new ProductDetailList(productDetailsList));
     }

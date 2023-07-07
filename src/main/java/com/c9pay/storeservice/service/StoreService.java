@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,5 +25,9 @@ public class StoreService {
         return storeRepository.findAllByUserId(userId).stream()
                 .map((s)->new StoreDetails(s.getId(), s.getName()))
                 .toList();
+    }
+
+    public Optional<Store> findStore(Long storeId) {
+        return storeRepository.findById(storeId);
     }
 }
