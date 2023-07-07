@@ -44,7 +44,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDetailList> addProducts(
+    public ResponseEntity<ProductDetailList> addProduct(
             @RequestAttribute UUID userId,
             @PathVariable("store-id") Long storeId,
             @RequestBody ProductForm productForm
@@ -60,6 +60,28 @@ public class ProductController {
         List<ProductDetails> productDetailsList = productService.getProductDetailsByStoreId(storeId);
 
         return ResponseEntity.ok(new ProductDetailList(productDetailsList));
+    }
+
+    @PostMapping("/{product-id}")
+    public ResponseEntity<ProductDetails> updateProduct(
+            @RequestAttribute UUID userId,
+            @PathVariable("store-id") Long storeId,
+            @PathVariable("product-id") Long productId,
+            @RequestBody ProductForm productForm
+    ) {
+        Optional<Store> storeOptional = storeService.findStore(storeId);
+
+        // 가게 검증
+        if (storeOptional.isEmpty() || !storeOptional.get().getUserId().equals(userId))
+            return ResponseEntity.badRequest().build();
+
+        // 상품 업데이트
+        Optional<ProductDetails> productDetailsOptional =
+                productService.updateProduct(productId, productForm.getName(), productForm.getPrice());
+
+        return productDetailsOptional
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     @PostMapping("/sale")

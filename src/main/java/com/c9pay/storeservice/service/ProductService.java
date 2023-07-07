@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -24,5 +25,14 @@ public class ProductService {
 
     public Product saveProduct(String name, int price, Store store) {
         return productRepository.save(new Product(name, price, store));
+    }
+
+    public Optional<ProductDetails> updateProduct(Long productId, String name, int price) {
+        Optional<Product> productOptional = productRepository.findById(productId);
+
+        return productOptional.map((p)->{
+            p.updateProduct(name, price);
+            return new ProductDetails(p.getId(), p.getName(), p.getPrice());
+        });
     }
 }

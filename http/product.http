@@ -23,3 +23,12 @@ Content-Type: application/json
     {"productId":  3, "amount": 2}
   ]
 }
+
+### 상품 업데이트
+POST {{store-api}}/1/product/1
+Content-Type: application/json
+Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODYzNjYwOH0._EIcdSmkgn3guTJRGc_TzksCwxbAiv53vo7dbFDuVFN1oJErtac1IMCVDrxLglGPOf7bIrGkzJwp1ZXC8Kxj4g
+
+{
+  "name": "Item5", "price": 4000
+}
