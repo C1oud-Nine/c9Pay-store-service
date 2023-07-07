@@ -10,7 +10,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductForm {
-    private UUID userId;
     private String name;
     private int price;
 }
