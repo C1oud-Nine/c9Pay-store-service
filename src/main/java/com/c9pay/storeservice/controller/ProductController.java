@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/{store-id}/product")
-public class ProductApiController {
+public class ProductController {
     @GetMapping
     public ResponseEntity<ProductDetailList> getProducts(
             @PathVariable("store-id") int storeId
