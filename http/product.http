@@ -11,19 +11,6 @@ Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYW
   "name": "Item6", "price": 4000
 }
 
-### 상품 판매
-POST {{store-api}}/1/product/sale
-Content-Type: application/json
-
-{
-  "qrId": "498043ea-142c-11ee-be56-0242ac120002",
-  "purchaseList": [
-    {"productId":  1, "amount": 2},
-    {"productId":  2, "amount": 1},
-    {"productId":  3, "amount": 2}
-  ]
-}
-
 ### 상품 업데이트
 POST {{store-api}}/1/product/1
 Content-Type: application/json
@@ -32,3 +19,22 @@ Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYW
 {
   "name": "Item5", "price": 4000
 }
+
+### 상품 삭제
+DELETE {{store-api}}/1/product/2
+Content-Type: application/json
+Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODYzNjYwOH0._EIcdSmkgn3guTJRGc_TzksCwxbAiv53vo7dbFDuVFN1oJErtac1IMCVDrxLglGPOf7bIrGkzJwp1ZXC8Kxj4g
+
+### 상품 판매
+POST {{store-api}}/1/product/sale
+Content-Type: application/json
+
+{
+"qrId": "498043ea-142c-11ee-be56-0242ac120002",
+"purchaseList": [
+{"productId":  1, "amount": 2},
+{"productId":  2, "amount": 1},
+{"productId":  3, "amount": 2}
+]
+}
+

@@ -55,6 +55,7 @@ public class ProductController {
         if (storeOptional.isEmpty() || !storeOptional.get().getUserId().equals(userId))
             return ResponseEntity.badRequest().build();
 
+        // 상품 생성
         productService.saveProduct(productForm.getName(), productForm.getPrice(), storeOptional.get());
 
         List<ProductDetails> productDetailsList = productService.getProductDetailsByStoreId(storeId);
@@ -82,6 +83,26 @@ public class ProductController {
         return productDetailsOptional
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
+    }
+
+    @DeleteMapping("/{product-id}")
+    public ResponseEntity<ProductDetailList> deleteProduct(
+            @RequestAttribute UUID userId,
+            @PathVariable("store-id") Long storeId,
+            @PathVariable("product-id") Long productId
+    ) {
+        Optional<Store> storeOptional = storeService.findStore(storeId);
+
+        // 가게 검증
+        if (storeOptional.isEmpty() || !storeOptional.get().getUserId().equals(userId))
+            return ResponseEntity.badRequest().build();
+
+        // 상품 삭제
+        productService.deleteProduct(productId);
+
+        List<ProductDetails> productDetailsList = productService.getProductDetailsByStoreId(storeId);
+
+        return ResponseEntity.ok(new ProductDetailList(productDetailsList));
     }
 
     @PostMapping("/sale")

@@ -35,4 +35,8 @@ public class ProductService {
             return new ProductDetails(p.getId(), p.getName(), p.getPrice());
         });
     }
+
+    public void deleteProduct(Long productId) {
+        productRepository.deleteById(productId);
+    }
 }
