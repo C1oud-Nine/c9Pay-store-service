@@ -1,16 +1,18 @@
 package com.c9pay.storeservice.mvc.controller;
 
+import com.c9pay.storeservice.data.dto.proxy.SerialNumberResponse;
 import com.c9pay.storeservice.data.dto.store.StoreDetailList;
 import com.c9pay.storeservice.data.dto.store.StoreDetails;
 import com.c9pay.storeservice.data.dto.store.StoreForm;
-import com.c9pay.storeservice.data.entity.Store;
 import com.c9pay.storeservice.mvc.service.StoreService;
+import com.c9pay.storeservice.proxy.AuthServiceProxy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -19,6 +21,7 @@ import java.util.UUID;
 @RequestMapping("/store")
 public class StoreController {
     private final StoreService storeService;
+    private final AuthServiceProxy authServiceProxy;
 
     /**
      * 사용자 토큰을 받아서 사용자 서비스를 통해 식별번호로 변경한 후,
@@ -44,12 +47,15 @@ public class StoreController {
      */
     @PostMapping
     public ResponseEntity<StoreDetailList> addStores(@RequestAttribute UUID userId, @RequestBody StoreForm storeForm) {
-        // todo 가게 식별번호를 획득하는 로직 작성
-        UUID storeId = UUID.randomUUID();
-        Store store = storeService.createStore(storeId, userId, storeForm.getName());
+        ResponseEntity<SerialNumberResponse> serialNumberResponse = authServiceProxy.createSerialNumber();
 
-        List<StoreDetails> storeDetailsList = storeService.getAllStoreDetails(userId);
+        Optional<SerialNumberResponse> responseOptional = Optional.ofNullable(serialNumberResponse.getBody());
 
-        return ResponseEntity.ok(new StoreDetailList(storeDetailsList));
+        return responseOptional
+                .map(SerialNumberResponse::getSerialNumber)
+                .map((id)->storeService.createStore(id, userId, storeForm.getName()))
+                .map((store)->storeService.getAllStoreDetails(userId))
+                .map((details)->ResponseEntity.ok(new StoreDetailList(details)))
+                .orElse(ResponseEntity.badRequest().build());
     }
 }

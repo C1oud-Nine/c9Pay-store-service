@@ -5,7 +5,7 @@ Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYW
 ### 가게 등록
 POST {{store-api}}/store
 Content-Type: application/json
-Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODYzNjYwOH0._EIcdSmkgn3guTJRGc_TzksCwxbAiv53vo7dbFDuVFN1oJErtac1IMCVDrxLglGPOf7bIrGkzJwp1ZXC8Kxj4g
+Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODg3NTI0M30.fX4_sAv7pBOFBOG5J9Gh4GM92xOFmLWDvoOwM0ICPxGmCofk64IX2sJy2i_80sMGYEGTe2jfoWBmWH5pApojeg
 
 {
   "name": "test4"
