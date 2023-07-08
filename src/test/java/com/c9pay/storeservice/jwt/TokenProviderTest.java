@@ -1,6 +1,6 @@
 package com.c9pay.storeservice.jwt;
 
-import com.c9pay.storeservice.jwt.TokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +18,7 @@ class TokenProviderTest {
     @Test
     void 토큰생성테스트() {
         // given
-        Authentication auth = mock();
+        Authentication auth = mock(Authentication.class);
         given(auth.getName()).willReturn("jaedoo");
         long tokenValidityInSeconds = 24*60*60;
         TokenProvider tokenProvider = new TokenProvider(secretKey, serviceType, tokenValidityInSeconds);
@@ -36,7 +36,7 @@ class TokenProviderTest {
     @Test
     void 토큰만료테스트() throws InterruptedException {
         // given
-        Authentication auth = mock();
+        Authentication auth = mock(Authentication.class);
         given(auth.getName()).willReturn("jaedoo");
         long tokenValidityInSeconds = 1;
         TokenProvider tokenProvider = new TokenProvider(secretKey, serviceType, tokenValidityInSeconds);
@@ -46,7 +46,7 @@ class TokenProviderTest {
 
         // when
         sleep(1500);
-        boolean isValid = tokenProvider.validateToken(token, mock());
+        boolean isValid = tokenProvider.validateToken(token, mock(HttpServletRequest.class));
 
         // then
         assertFalse(isValid);
@@ -57,8 +57,8 @@ class TokenProviderTest {
         // given
         String userSecret = "ABCD" + secretKey.substring(4);
 
-        Authentication storeAuth = mock();
-        Authentication userAuth = mock();
+        Authentication storeAuth = mock(Authentication.class);
+        Authentication userAuth = mock(Authentication.class);
         given(storeAuth.getName()).willReturn("JD");
         given(userAuth.getName()).willReturn("jaedoo");
         long tokenValidityInSeconds = 60*60*24;
