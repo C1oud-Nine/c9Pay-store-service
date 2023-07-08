@@ -1,4 +1,4 @@
-package com.c9pay.storeservice.dto.product;
+package com.c9pay.storeservice.data.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

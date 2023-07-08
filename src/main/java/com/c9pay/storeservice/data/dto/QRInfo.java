@@ -1,4 +1,4 @@
-package com.c9pay.storeservice.dto.store;
+package com.c9pay.storeservice.data.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +9,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreForm {
-    private String name;
+public class QRInfo {
+    private String certificate;
+    private String content;
 }

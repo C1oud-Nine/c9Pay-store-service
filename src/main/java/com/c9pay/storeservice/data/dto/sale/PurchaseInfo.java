@@ -1,6 +1,6 @@
-package com.c9pay.storeservice.dto.sale;
+package com.c9pay.storeservice.data.dto.sale;
 
-import com.c9pay.storeservice.dto.QRInfo;
+import com.c9pay.storeservice.data.dto.QRInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

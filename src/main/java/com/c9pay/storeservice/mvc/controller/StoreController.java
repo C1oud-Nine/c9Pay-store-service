@@ -1,10 +1,10 @@
-package com.c9pay.storeservice.controller;
+package com.c9pay.storeservice.mvc.controller;
 
-import com.c9pay.storeservice.dto.store.StoreDetailList;
-import com.c9pay.storeservice.dto.store.StoreDetails;
-import com.c9pay.storeservice.dto.store.StoreForm;
-import com.c9pay.storeservice.entity.Store;
-import com.c9pay.storeservice.service.StoreService;
+import com.c9pay.storeservice.data.dto.store.StoreDetailList;
+import com.c9pay.storeservice.data.dto.store.StoreDetails;
+import com.c9pay.storeservice.data.dto.store.StoreForm;
+import com.c9pay.storeservice.data.entity.Store;
+import com.c9pay.storeservice.mvc.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

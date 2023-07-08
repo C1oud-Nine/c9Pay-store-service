@@ -1,6 +1,6 @@
-package com.c9pay.storeservice.repository;
+package com.c9pay.storeservice.mvc.repository;
 
-import com.c9pay.storeservice.entity.Store;
+import com.c9pay.storeservice.data.entity.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

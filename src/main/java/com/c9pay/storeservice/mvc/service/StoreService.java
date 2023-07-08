@@ -1,8 +1,8 @@
-package com.c9pay.storeservice.service;
+package com.c9pay.storeservice.mvc.service;
 
-import com.c9pay.storeservice.dto.store.StoreDetails;
-import com.c9pay.storeservice.entity.Store;
-import com.c9pay.storeservice.repository.StoreRepository;
+import com.c9pay.storeservice.data.dto.store.StoreDetails;
+import com.c9pay.storeservice.data.entity.Store;
+import com.c9pay.storeservice.mvc.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

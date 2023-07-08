@@ -1,9 +1,8 @@
-package com.c9pay.storeservice.controller;
+package com.c9pay.storeservice.mvc.controller;
 
-import com.c9pay.storeservice.dto.store.StoreDetails;
+import com.c9pay.storeservice.data.dto.store.StoreDetails;
 import com.c9pay.storeservice.jwt.TokenProvider;
-import com.c9pay.storeservice.repository.StoreRepository;
-import com.c9pay.storeservice.service.StoreService;
+import com.c9pay.storeservice.mvc.service.StoreService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

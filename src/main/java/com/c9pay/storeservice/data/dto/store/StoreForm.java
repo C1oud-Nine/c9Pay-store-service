@@ -1,13 +1,14 @@
-package com.c9pay.storeservice.dto.sale;
+package com.c9pay.storeservice.data.dto.store;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductPurchaseInfo {
-    private long productId;
-    private int amount;
+public class StoreForm {
+    private String name;
 }

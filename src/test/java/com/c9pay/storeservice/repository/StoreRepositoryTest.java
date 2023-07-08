@@ -1,7 +1,9 @@
 package com.c9pay.storeservice.repository;
 
-import com.c9pay.storeservice.entity.Product;
-import com.c9pay.storeservice.entity.Store;
+import com.c9pay.storeservice.data.entity.Product;
+import com.c9pay.storeservice.data.entity.Store;
+import com.c9pay.storeservice.mvc.repository.ProductRepository;
+import com.c9pay.storeservice.mvc.repository.StoreRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,8 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class StoreRepositoryTest {
-    @Autowired ProductRepository productRepository;
-    @Autowired StoreRepository storeRepository;
+    @Autowired
+    ProductRepository productRepository;
+    @Autowired
+    StoreRepository storeRepository;
 
     @Test
     void store_id로_product_조회() {

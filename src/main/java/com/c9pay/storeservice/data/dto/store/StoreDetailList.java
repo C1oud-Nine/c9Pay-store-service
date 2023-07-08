@@ -1,4 +1,4 @@
-package com.c9pay.storeservice.dto.product;
+package com.c9pay.storeservice.data.dto.store;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDetailList {
-    private List<ProductDetails> productDetails;
+public class StoreDetailList {
+    private List<StoreDetails> storeDetails;
 }

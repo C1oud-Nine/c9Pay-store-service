@@ -1,4 +1,4 @@
-package com.c9pay.storeservice.entity;
+package com.c9pay.storeservice.data.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.c9pay.storeservice.dto.sale;
+package com.c9pay.storeservice.data.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentInfo {
-    List<ProductSaleInfo> productSaleInfoList;
-    int totalAmount;
+public class ProductDetailList {
+    private List<ProductDetails> productDetails;
 }
