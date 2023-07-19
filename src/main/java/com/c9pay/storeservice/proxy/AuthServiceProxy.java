@@ -1,5 +1,6 @@
 package com.c9pay.storeservice.proxy;
 
+import com.c9pay.storeservice.data.dto.certificate.PublicKeyResponse;
 import com.c9pay.storeservice.data.dto.proxy.SerialNumberResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -16,4 +17,7 @@ public interface AuthServiceProxy {
 
     @GetMapping("/auth-service/serial-number")
     public ResponseEntity<?> verifySerialNumber(@RequestParam UUID serialNumber);
+
+    @GetMapping("/auth-service/public-key")
+    public ResponseEntity<PublicKeyResponse> getPublicKey();
 }
