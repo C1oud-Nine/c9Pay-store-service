@@ -1,7 +1,11 @@
 package com.c9pay.storeservice.mvc.controller;
 
-import com.c9pay.storeservice.certificate.CertificationProvider;
-import com.c9pay.storeservice.data.dto.QRInfo;
+import com.c9pay.storeservice.certificate.Decoder;
+import com.c9pay.storeservice.certificate.PublicKeyProvider;
+import com.c9pay.storeservice.certificate.PublicKeyProviderFactory;
+import com.c9pay.storeservice.data.dto.charge.ChargeAmount;
+import com.c9pay.storeservice.data.dto.qr.QRContent;
+import com.c9pay.storeservice.data.dto.qr.QRInfo;
 import com.c9pay.storeservice.data.dto.certificate.ServiceDetails;
 import com.c9pay.storeservice.data.dto.product.ProductDetailList;
 import com.c9pay.storeservice.data.dto.product.ProductDetails;
@@ -12,6 +16,7 @@ import com.c9pay.storeservice.data.dto.sale.PurchaseInfo;
 import com.c9pay.storeservice.data.entity.Store;
 import com.c9pay.storeservice.mvc.service.ProductService;
 import com.c9pay.storeservice.mvc.service.StoreService;
+import com.c9pay.storeservice.proxy.CreditServiceProxy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +33,10 @@ import java.util.UUID;
 public class ProductController {
     private final ProductService productService;
     private final StoreService storeService;
-    private final CertificationProvider certificationProvider;
+    private final PublicKeyProviderFactory publicKeyProviderFactory;
+    private final Decoder decoder;
+    private final CreditServiceProxy creditServiceProxy;
+
     @GetMapping
     public ResponseEntity<ProductDetailList> getProducts(
             @RequestAttribute UUID userId,
@@ -110,14 +118,21 @@ public class ProductController {
 
     @PostMapping("/sale")
     public ResponseEntity<PaymentInfo> sellProducts(
-            @PathVariable("store-id") int storeId,
+            @PathVariable("store-id") long storeId,
             @RequestBody PurchaseInfo purchaseInfo
     ) {
         // 인증서 복호화를 통한 공개키 획득
         QRInfo qrInfo = purchaseInfo.getQrInfo();
-        Optional<ServiceDetails> serviceDetailsOptional = certificationProvider.decrypt(qrInfo.getCertificate());
+        Optional<ServiceDetails> serviceDetailsOptional =
+                decoder.decrypt(
+                        publicKeyProviderFactory.authServicePublicKeyProvider(),
+                        qrInfo.getCertificate().getCertificate(),
+                        qrInfo.getCertificate().getSign(),
+                        ServiceDetails.class);
 
-        // todo 공개키를 이용하여 QR Content 복호화
+        Optional<QRContent> qrContent = serviceDetailsOptional.map(ServiceDetails::getPublicKey)
+                .map(publicKeyProviderFactory::generalPublicKeyProvider)
+                .flatMap(pp -> decoder.decrypt(pp, qrInfo.getContent(), QRContent.class));
 
         // todo 구매정보를 바탕으로 결제정보 생성
         List<ProductSaleInfo> productSaleInfoList = purchaseInfo.getPurchaseList().stream()
@@ -127,6 +142,8 @@ public class ProductController {
         int totalAmount = productSaleInfoList.stream().mapToInt(ProductSaleInfo::getAmount).sum();
 
         // todo 사용자 식별번호와 가게 주인 식별번호를 코인 서비스 송금으로 넘김
+        UUID userId = storeService.findStore(storeId).get().getUserId();
+        creditServiceProxy.transfer(userId.toString(), qrContent.get().getSerialNumber(), new ChargeAmount(totalAmount));
 
         return ResponseEntity.ok(new PaymentInfo(productSaleInfoList, totalAmount));
     }

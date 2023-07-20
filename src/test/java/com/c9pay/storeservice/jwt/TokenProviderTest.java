@@ -14,7 +14,7 @@ import static org.mockito.Mockito.mock;
 
 class TokenProviderTest {
     final String secretKey = "REVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVA==";
-    final String serviceType = "user";
+    final String serviceType = "store";
     @Test
     void 토큰생성테스트() {
         // given
