@@ -1,5 +1,8 @@
 package com.c9pay.storeservice.mvc.controller;
 
+import com.c9pay.storeservice.certificate.CertificationProvider;
+import com.c9pay.storeservice.data.dto.QRInfo;
+import com.c9pay.storeservice.data.dto.certificate.ServiceDetails;
 import com.c9pay.storeservice.data.dto.product.ProductDetailList;
 import com.c9pay.storeservice.data.dto.product.ProductDetails;
 import com.c9pay.storeservice.data.dto.product.ProductForm;
@@ -25,6 +28,7 @@ import java.util.UUID;
 public class ProductController {
     private final ProductService productService;
     private final StoreService storeService;
+    private final CertificationProvider certificationProvider;
     @GetMapping
     public ResponseEntity<ProductDetailList> getProducts(
             @RequestAttribute UUID userId,
@@ -109,7 +113,11 @@ public class ProductController {
             @PathVariable("store-id") int storeId,
             @RequestBody PurchaseInfo purchaseInfo
     ) {
-        // todo QR 정보를 바탕으로 인증 서비스에서 사용자 식별번호 획득
+        // 인증서 복호화를 통한 공개키 획득
+        QRInfo qrInfo = purchaseInfo.getQrInfo();
+        Optional<ServiceDetails> serviceDetailsOptional = certificationProvider.decrypt(qrInfo.getCertificate());
+
+        // todo 공개키를 이용하여 QR Content 복호화
 
         // todo 구매정보를 바탕으로 결제정보 생성
         List<ProductSaleInfo> productSaleInfoList = purchaseInfo.getPurchaseList().stream()
