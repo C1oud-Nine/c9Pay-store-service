@@ -1,8 +1,9 @@
 package com.c9pay.storeservice.service;
 
-import com.c9pay.storeservice.dto.store.StoreDetails;
-import com.c9pay.storeservice.entity.Store;
-import com.c9pay.storeservice.repository.StoreRepository;
+import com.c9pay.storeservice.data.dto.store.StoreDetails;
+import com.c9pay.storeservice.data.entity.Store;
+import com.c9pay.storeservice.mvc.repository.StoreRepository;
+import com.c9pay.storeservice.mvc.service.StoreService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
