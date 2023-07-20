@@ -1,6 +1,5 @@
 package com.c9pay.storeservice.certificate;
 
-import com.c9pay.storeservice.data.dto.certificate.CertificateResponse;
 import com.c9pay.storeservice.data.dto.certificate.PublicKeyResponse;
 import com.c9pay.storeservice.data.dto.certificate.ServiceDetails;
 import com.c9pay.storeservice.data.dto.certificate.ServiceInfo;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 
-import java.security.cert.Certificate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,9 +18,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 class CertificationProviderTest {
-    CertificationProvider certificationProvider;
+    Decoder decoder;
     static final KeyAlgorithm rsa = new Rsa();
     AuthServiceProxy authServiceProxy;
+    AuthServicePublicKeyProvider authServicePublicKeyProvider;
     static final String publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnwYpbFadGxnYQdAdTfgKmJvzLTRqPrAelDN6FE9+" +
             "WMEoVyY5n1x00v8SBNVLrTEuZmqhrSMsh8V89mSIDPWFUcopcfnAP1/sHzExeg/Z15CKB2jbRsPkQ+mtS97aqxKnpilOeu/" +
             "9O4xsEHEuES0xD8mKqTphQ9ZVWAk/rbzKAV30Ga/DqpYWyBbsSkxjCblFR2MUG9z/ZS8O7UH02+tsZgcRcD1VFt/0Y+A11J" +
@@ -43,8 +42,8 @@ class CertificationProviderTest {
         authServiceProxy = mock(MockAuthServiceProxy.class);
         given(authServiceProxy.getPublicKey())
                 .willReturn(ResponseEntity.ok(new PublicKeyResponse(publicKey)));
-        certificationProvider = new CertificationProvider(authServiceProxy, rsa, new ObjectMapper());
-        certificationProvider.getPublicKey();
+        decoder = new Decoder(new ObjectMapper());
+        authServicePublicKeyProvider = new AuthServicePublicKeyProvider(rsa, authServiceProxy);
     }
 
     @Test
@@ -53,10 +52,9 @@ class CertificationProviderTest {
         // given
         ServiceInfo expectedServiceInfo = new ServiceInfo("dummy-service", "/dummy");
         ServiceDetails expected = new ServiceDetails("dummy-public-key", expectedServiceInfo);
-        CertificateResponse encoded = new CertificateResponse(certification, signature);
 
         // when
-        Optional<ServiceDetails> decrypt = certificationProvider.decrypt(encoded);
+        Optional<ServiceDetails> decrypt = decoder.decrypt(authServicePublicKeyProvider, certification, signature, ServiceDetails.class);
 
         // then
         assertTrue(decrypt.isPresent());
