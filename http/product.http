@@ -1,9 +1,9 @@
 ### 상품 조회
-GET {{store-api}}/1/product
+GET {{store-api}}/api/1/product
 Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODYzNjYwOH0._EIcdSmkgn3guTJRGc_TzksCwxbAiv53vo7dbFDuVFN1oJErtac1IMCVDrxLglGPOf7bIrGkzJwp1ZXC8Kxj4g
 
 ### 상품 추가
-POST {{store-api}}/1/product
+POST {{store-api}}/api/1/product
 Content-Type: application/json
 Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODYzNjYwOH0._EIcdSmkgn3guTJRGc_TzksCwxbAiv53vo7dbFDuVFN1oJErtac1IMCVDrxLglGPOf7bIrGkzJwp1ZXC8Kxj4g
 
@@ -12,7 +12,7 @@ Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYW
 }
 
 ### 상품 업데이트
-POST {{store-api}}/1/product/1
+POST {{store-api}}/api/1/product/1
 Content-Type: application/json
 Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODYzNjYwOH0._EIcdSmkgn3guTJRGc_TzksCwxbAiv53vo7dbFDuVFN1oJErtac1IMCVDrxLglGPOf7bIrGkzJwp1ZXC8Kxj4g
 
@@ -21,12 +21,12 @@ Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYW
 }
 
 ### 상품 삭제
-DELETE {{store-api}}/1/product/2
+DELETE {{store-api}}/api/1/product/2
 Content-Type: application/json
 Cookie: Authorization=Bearer+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWVkb28iLCJ0eXBlIjoidXNlciIsImlwIjoiMTIzNCIsImV4cCI6MTY4ODYzNjYwOH0._EIcdSmkgn3guTJRGc_TzksCwxbAiv53vo7dbFDuVFN1oJErtac1IMCVDrxLglGPOf7bIrGkzJwp1ZXC8Kxj4g
 
 ### 상품 판매
-POST {{store-api}}/1/product/sale
+POST {{store-api}}/api/1/product/sale
 Content-Type: application/json
 
 {
