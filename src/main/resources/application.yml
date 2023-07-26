@@ -1,6 +1,8 @@
 server.port: 8084
 
 spring:
+  application:
+    name: store-service
   jpa:
     hibernate:
       ddl-auto: create
@@ -18,8 +20,24 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.type: info
     com.c9pay.storeservice: debug
+  pattern:
+    level: "%5p [${spring.application.name},%X{traceId:-},%X{spanId:-}]"
+
 
 jwt:
   service-type: store
   secret: REVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVA==
   token-validity-in-seconds: 86400 # 24시간
+
+
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      consume: b3, w3c
+      produce: b3, w3c
+  zipkin:
+    tracing:
+      endpoint: "http://localhost:9411/api/v2/spans"
