@@ -10,6 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
-        configurer.addPathPrefix("/store-service", HandlerTypePredicate.forAnnotation(RestController.class));
+        configurer.addPathPrefix("/store-service/api", HandlerTypePredicate.forAnnotation(RestController.class));
     }
 }
