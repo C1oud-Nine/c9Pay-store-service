@@ -6,6 +6,7 @@ import com.c9pay.storeservice.data.dto.store.StoreDetails;
 import com.c9pay.storeservice.data.dto.store.StoreForm;
 import com.c9pay.storeservice.mvc.service.StoreService;
 import com.c9pay.storeservice.proxy.AuthServiceProxy;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,8 @@ public class StoreController {
      * @return 사용자의 모든 가게를 응답
      */
     @GetMapping
-    public ResponseEntity<StoreDetailList> getStores(@RequestAttribute UUID userId) {
+    public ResponseEntity<StoreDetailList> getStores(HttpSession session) {
+        UUID userId = (UUID) session.getAttribute("userId");
         List<StoreDetails> storeDetailsList = storeService.getAllStoreDetails(userId);
         return ResponseEntity.ok(new StoreDetailList(storeDetailsList));
     }
@@ -46,9 +48,10 @@ public class StoreController {
      * @return 사용자의 모든 가게를 응답
      */
     @PostMapping
-    public ResponseEntity<StoreDetailList> addStores(@RequestAttribute UUID userId, @RequestBody StoreForm storeForm) {
+    public ResponseEntity<StoreDetailList> addStores(HttpSession session, @RequestBody StoreForm storeForm) {
         ResponseEntity<SerialNumberResponse> serialNumberResponse = authServiceProxy.createSerialNumber();
-
+        UUID userId = (UUID) session.getAttribute("userId");
+        log.info("UUID: {}", userId);
         Optional<SerialNumberResponse> responseOptional = Optional.ofNullable(serialNumberResponse.getBody());
 
         return responseOptional

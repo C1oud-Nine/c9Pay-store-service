@@ -13,10 +13,13 @@ import com.c9pay.storeservice.data.dto.product.ProductForm;
 import com.c9pay.storeservice.data.dto.sale.PaymentInfo;
 import com.c9pay.storeservice.data.dto.sale.ProductSaleInfo;
 import com.c9pay.storeservice.data.dto.sale.PurchaseInfo;
+import com.c9pay.storeservice.data.entity.Product;
 import com.c9pay.storeservice.data.entity.Store;
+import com.c9pay.storeservice.mvc.repository.ProductRepository;
 import com.c9pay.storeservice.mvc.service.ProductService;
 import com.c9pay.storeservice.mvc.service.StoreService;
 import com.c9pay.storeservice.proxy.CreditServiceProxy;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +35,7 @@ import java.util.UUID;
 @RequestMapping("/{store-id}/product")
 public class ProductController {
     private final ProductService productService;
+    private final ProductRepository productRepository;
     private final StoreService storeService;
     private final PublicKeyProviderFactory publicKeyProviderFactory;
     private final Decoder decoder;
@@ -39,9 +43,10 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ProductDetailList> getProducts(
-            @RequestAttribute UUID userId,
+            HttpSession session,
             @PathVariable("store-id") Long storeId
     ) {
+        UUID userId = (UUID) session.getAttribute("userId");
         Optional<Store> storeOptional = storeService.findStore(storeId);
 
         // 가게 검증
@@ -56,10 +61,11 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDetailList> addProduct(
-            @RequestAttribute UUID userId,
+            HttpSession session,
             @PathVariable("store-id") Long storeId,
             @RequestBody ProductForm productForm
     ) {
+        UUID userId = (UUID) session.getAttribute("userId");
         Optional<Store> storeOptional = storeService.findStore(storeId);
 
         // 가게 검증
@@ -76,11 +82,12 @@ public class ProductController {
 
     @PostMapping("/{product-id}")
     public ResponseEntity<ProductDetails> updateProduct(
-            @RequestAttribute UUID userId,
+            HttpSession session,
             @PathVariable("store-id") Long storeId,
             @PathVariable("product-id") Long productId,
             @RequestBody ProductForm productForm
     ) {
+        UUID userId = (UUID) session.getAttribute("userId");
         Optional<Store> storeOptional = storeService.findStore(storeId);
 
         // 가게 검증
@@ -98,10 +105,11 @@ public class ProductController {
 
     @DeleteMapping("/{product-id}")
     public ResponseEntity<ProductDetailList> deleteProduct(
-            @RequestAttribute UUID userId,
+            HttpSession session,
             @PathVariable("store-id") Long storeId,
             @PathVariable("product-id") Long productId
     ) {
+        UUID userId = (UUID) session.getAttribute("userId");
         Optional<Store> storeOptional = storeService.findStore(storeId);
 
         // 가게 검증
@@ -129,21 +137,24 @@ public class ProductController {
                         qrInfo.getCertificate().getCertificate(),
                         qrInfo.getCertificate().getSign(),
                         ServiceDetails.class);
+        log.info("{}", serviceDetailsOptional);
 
-        Optional<QRContent> qrContent = serviceDetailsOptional.map(ServiceDetails::getPublicKey)
-                .map(publicKeyProviderFactory::generalPublicKeyProvider)
-                .flatMap(pp -> decoder.decrypt(pp, qrInfo.getContent(), QRContent.class));
+        // Optional<QRContent> qrContent = serviceDetailsOptional.map(ServiceDetails::getPublicKey)
+        //        .map(publicKeyProviderFactory::generalPublicKeyProvider)
+        //        .flatMap(pp -> decoder.decrypt(pp, qrInfo.getContent(), QRContent.class));
 
         // todo 구매정보를 바탕으로 결제정보 생성
         List<ProductSaleInfo> productSaleInfoList = purchaseInfo.getPurchaseList().stream()
-                .map((p) -> new ProductSaleInfo(p.getProductId(), "store" + p.getProductId(),
-                        (int) p.getProductId() * 1000, (int) p.getProductId() * p.getAmount() * 1000))
+                .map((p) -> {
+                    Product product = productRepository.findById(p.getProductId()).get();
+                    return new ProductSaleInfo(product.getId(), product.getName(), product.getPrice(), p.getAmount());
+                })
                 .toList();
-        int totalAmount = productSaleInfoList.stream().mapToInt(ProductSaleInfo::getAmount).sum();
+        int totalAmount = productSaleInfoList.stream().mapToInt((p)->p.getAmount() * p.getPrice()).sum();
 
         // todo 사용자 식별번호와 가게 주인 식별번호를 코인 서비스 송금으로 넘김
-        UUID userId = storeService.findStore(storeId).get().getUserId();
-        creditServiceProxy.transfer(userId.toString(), qrContent.get().getSerialNumber(), new ChargeAmount(totalAmount));
+        // UUID userId = storeService.findStore(storeId).get().getUserId();
+        // creditServiceProxy.transfer(userId.toString(), qrContent.get().getSerialNumber(), new ChargeAmount(totalAmount));
 
         return ResponseEntity.ok(new PaymentInfo(productSaleInfoList, totalAmount));
     }
