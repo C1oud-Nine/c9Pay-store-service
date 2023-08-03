@@ -6,6 +6,7 @@ import com.c9pay.storeservice.mvc.service.StoreService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,9 +28,9 @@ public class LoginController {
     private final StoreService storeService;
     private final TokenProvider tokenProvider;
     @PostMapping("/login")
-    public ResponseEntity<StoreDetails> login(@RequestAttribute UUID userId, @PathVariable("store-id") long storeId,
+    public ResponseEntity<StoreDetails> login(HttpSession session, @PathVariable("store-id") long storeId,
                                               HttpServletRequest request, HttpServletResponse response) {
-        response.addCookie(new Cookie("Authorization", "dummy-store-token"));
+        UUID userId = (UUID) session.getAttribute("userId");
         log.debug("userId: {}", userId);
 
         Optional<StoreDetails> storeDetailsOptional = storeService.getAllStoreDetails(userId).stream()
@@ -40,7 +41,9 @@ public class LoginController {
         if (storeDetailsOptional.isPresent()) {
             Authentication authentication = new UsernamePasswordAuthenticationToken(storeId, "");
             String token = tokenProvider.createToken(authentication, request.getRemoteAddr());
-            response.addCookie(new Cookie(AUTHORIZATION_HEADER, "Bearer+"+token));
+            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, "Bearer+" + token);
+            cookie.setPath("/");
+            response.addCookie(cookie);
 
             return ResponseEntity.ok(storeDetailsOptional.get());
         } else {

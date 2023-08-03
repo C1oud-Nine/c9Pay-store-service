@@ -35,7 +35,7 @@ public class JwtFilter implements Filter {
             if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("user"))) {
                 // todo 사용자 서비스로부터 사용자식별번호 획득필요
                 UUID userId = UUID.fromString("64cf334e-1b12-11ee-be56-0242ac120002");
-                request.setAttribute("userId", userId);
+                ((HttpServletRequest) request).getSession().setAttribute("userId", userId);
             } else {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

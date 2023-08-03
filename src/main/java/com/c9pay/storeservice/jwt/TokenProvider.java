@@ -69,14 +69,14 @@ public class TokenProvider {
             JWTVerifier verifier = verification.build(Clock.systemUTC());
 
             DecodedJWT decodedJWT = verifier.verify(token);
-
-            if (decodedJWT.getClaim(SERVICE_TYPE).as(String.class).equals(serviceType)) {
-                String ipAddr = decodedJWT.getClaim(IP_ADDR).as(String.class);
-                if (!ipAddr.equals(request.getRemoteAddr())) {
-                    log.debug("Store token ip is different. expected: {}, actual: {}", ipAddr, request.getRemoteAddr());
-                    return false;
-                }
-            }
+            // todo : ipaddr로 구분 필요
+//            if (decodedJWT.getClaim(SERVICE_TYPE).as(String.class).equals(serviceType)) {
+//                String ipAddr = decodedJWT.getClaim(IP_ADDR).as(String.class);
+//                if (!ipAddr.equals(request.getRemoteAddr())) {
+//                    log.debug("Store token ip is different. expected: {}, actual: {}", ipAddr, request.getRemoteAddr());
+//                    return false;
+//                }
+//            }
 
             return true;
 
