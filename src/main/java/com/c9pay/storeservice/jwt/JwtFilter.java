@@ -1,6 +1,8 @@
 package com.c9pay.storeservice.jwt;
 
+import com.c9pay.storeservice.proxy.UserServiceProxy;
 import jakarta.servlet.*;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import static com.c9pay.storeservice.constant.CookieConstant.AUTHORIZATION_HEADER;
+import static com.c9pay.storeservice.jwt.TokenProvider.IP_ADDR;
+import static com.c9pay.storeservice.jwt.TokenProvider.SERVICE_TYPE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,18 +29,25 @@ public class JwtFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         String jwt = resolveToken(httpServletRequest);
         String ipAddress = httpServletRequest.getRemoteAddr();
 
-        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt, httpServletRequest)) {
-            Authentication authentication = tokenProvider.getAuthentication(jwt);
-            if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("user"))) {
-                // todo 사용자 서비스로부터 사용자식별번호 획득필요
-                UUID userId = UUID.fromString("64cf334e-1b12-11ee-be56-0242ac120002");
-                ((HttpServletRequest) request).getSession().setAttribute("userId", userId);
-            } else {
+        if (StringUtils.hasText(jwt)) {
+            JwtData jwtData = tokenProvider.getJwtData(jwt);
+
+            // todo 사용자 서비스로부터 토큰 검증 필요
+            boolean isUserTokenValid = "user".equals(jwtData.getSub()) && true;
+
+            boolean isStoreTokenValid = jwtData.getClaims().containsKey(SERVICE_TYPE) &&
+                    "store".equals(jwtData.getClaims().get(SERVICE_TYPE).asString()) &&
+                    tokenProvider.validateToken(jwt) &&
+                    jwtData.getClaims().containsKey(IP_ADDR) &&
+                    ipAddress.equals(jwtData.getClaims().get(IP_ADDR).asString());
+
+            if (isUserTokenValid || isStoreTokenValid) {
+                Authentication authentication = tokenProvider.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
@@ -48,7 +59,7 @@ public class JwtFilter implements Filter {
         String bearerToken = null;
         if (request.getCookies() != null)
             bearerToken = Arrays.stream(request.getCookies()).filter((cookie -> cookie.getName().equals(AUTHORIZATION_HEADER)))
-                    .findFirst().map(cookie -> cookie.getValue()).orElse(null);
+                    .findFirst().map(Cookie::getValue).orElse(null);
 
         log.debug("쿠키의 토큰 : {}", bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer+")) {
