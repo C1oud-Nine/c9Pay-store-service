@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.c9pay.storeservice.constant.CookieConstant.AUTHORIZATION_HEADER;
@@ -26,6 +30,7 @@ import static com.c9pay.storeservice.jwt.TokenProvider.SERVICE_TYPE;
 @RequiredArgsConstructor
 public class JwtFilter implements Filter {
     private final TokenProvider tokenProvider;
+    private final UserServiceProxy userServiceProxy;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -37,8 +42,8 @@ public class JwtFilter implements Filter {
         if (StringUtils.hasText(jwt)) {
             JwtData jwtData = tokenProvider.getJwtData(jwt);
 
-            // todo 사용자 서비스로부터 토큰 검증 필요
-            boolean isUserTokenValid = "user".equals(jwtData.getSub()) && true;
+            boolean isUserToken =  jwtData.getClaims().containsKey(SERVICE_TYPE) &&
+                    "user".equals(jwtData.getClaims().get(SERVICE_TYPE).asString());
 
             boolean isStoreTokenValid = jwtData.getClaims().containsKey(SERVICE_TYPE) &&
                     "store".equals(jwtData.getClaims().get(SERVICE_TYPE).asString()) &&
@@ -46,9 +51,18 @@ public class JwtFilter implements Filter {
                     jwtData.getClaims().containsKey(IP_ADDR) &&
                     ipAddress.equals(jwtData.getClaims().get(IP_ADDR).asString());
 
-            if (isUserTokenValid || isStoreTokenValid) {
+            if (isStoreTokenValid) {
                 Authentication authentication = tokenProvider.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
+            if (isUserToken) {
+                Optional<UUID> userSerialNumber = getUserSerialNumber(httpServletRequest);
+                if (userSerialNumber.isPresent()) {
+                    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("user");
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(userSerialNumber.get(), null, List.of(authority));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         }
 
@@ -71,5 +85,21 @@ public class JwtFilter implements Filter {
         }
 
         return null;
+    }
+
+    private Optional<UUID> getUserSerialNumber(HttpServletRequest request) {
+        String bearerToken = null;
+        if (request.getCookies() != null)
+            bearerToken = Arrays.stream(request.getCookies()).filter((cookie -> cookie.getName().equals(AUTHORIZATION_HEADER)))
+                    .findFirst().map(Cookie::getValue).orElse(null);
+
+        if (StringUtils.hasText(bearerToken)) {
+            ResponseEntity<?> serialNumber = userServiceProxy.getSerialNumber(bearerToken);
+            if (serialNumber.getStatusCode().is2xxSuccessful()) {
+                return Optional.of((UUID) serialNumber.getBody());
+            }
+        }
+
+        return Optional.empty();
     }
 }

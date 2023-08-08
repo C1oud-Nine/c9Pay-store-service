@@ -2,19 +2,24 @@ package com.c9pay.storeservice.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.c9pay.storeservice.proxy.UserServiceProxy;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.*;
 import org.mockito.MockedStatic;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.UUID;
 
 import static com.c9pay.storeservice.constant.CookieConstant.AUTHORIZATION_HEADER;
 import static com.c9pay.storeservice.jwt.TokenProvider.IP_ADDR;
@@ -51,7 +56,7 @@ class JwtFilterTest {
         String storeToken = getStoreToken(storeSub, ip);
         request.setToken(storeToken);
         request.setIp(ip);
-        JwtFilter jwtFilter = new JwtFilter(tokenProvider);
+        JwtFilter jwtFilter = new JwtFilter(tokenProvider, mock(TestUserServiceProxy.class));
 
         // when
         jwtFilter.doFilter(request, mock(MResponse.class), mock(FilterChain.class));
@@ -61,6 +66,27 @@ class JwtFilterTest {
         Collection<? extends GrantedAuthority> authorities = securityContext.getAuthentication().getAuthorities();
         Assertions.assertEquals(storeSub, name);
         Assertions.assertTrue(authorities.stream().map(GrantedAuthority::getAuthority).anyMatch("store"::equals));
+    }
+
+    @Test
+    void 사용자토큰테스트() throws ServletException, IOException {
+        // given
+        TokenProvider tokenProvider = new TokenProvider(secret, "store", 86400);
+        String userSub = "id";
+        String userToken = getUserToken(userSub);
+        UUID expected = UUID.randomUUID();
+        TestUserServiceProxy userServiceProxy = new TestUserServiceProxy(expected);
+        request.setToken(userToken);
+        JwtFilter jwtFilter = new JwtFilter(tokenProvider, userServiceProxy);
+
+        // when
+        jwtFilter.doFilter(request, mock(MResponse.class), mock(FilterChain.class));
+
+        // then
+        Object name = securityContext.getAuthentication().getName();
+        Collection<? extends GrantedAuthority> authorities = securityContext.getAuthentication().getAuthorities();
+        Assertions.assertEquals(expected.toString(), name);
+        Assertions.assertTrue(authorities.stream().map(GrantedAuthority::getAuthority).anyMatch("user"::equals));
     }
 
     abstract static class MSecurityContext implements SecurityContext {
@@ -115,6 +141,19 @@ class JwtFilterTest {
                 .withSubject(sub)
                 .withClaim(SERVICE_TYPE, "user")
                 .sign(algorithm);
+    }
+
+    class TestUserServiceProxy implements UserServiceProxy {
+        public UUID userSerialNumber;
+
+        public TestUserServiceProxy(UUID userSerialNumber) {
+            this.userSerialNumber = userSerialNumber;
+        }
+
+        @Override
+        public ResponseEntity<?> getSerialNumber(String token) {
+            return ResponseEntity.ok(userSerialNumber);
+        }
     }
 
     @AfterAll

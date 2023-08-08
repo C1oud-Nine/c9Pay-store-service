@@ -2,6 +2,7 @@ package com.c9pay.storeservice.config;
 
 import com.c9pay.storeservice.jwt.JwtSecurityConfig;
 import com.c9pay.storeservice.jwt.TokenProvider;
+import com.c9pay.storeservice.proxy.UserServiceProxy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,13 +17,13 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, TokenProvider tokenProvider) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, TokenProvider tokenProvider, UserServiceProxy userServiceProxy) throws Exception {
         HttpSecurity httpSecurity = http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((s) -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((t) -> t.requestMatchers("/**").permitAll());
 
-        httpSecurity.apply(new JwtSecurityConfig(tokenProvider));
+        httpSecurity.apply(new JwtSecurityConfig(tokenProvider, userServiceProxy));
 
         return httpSecurity.build();
     }
