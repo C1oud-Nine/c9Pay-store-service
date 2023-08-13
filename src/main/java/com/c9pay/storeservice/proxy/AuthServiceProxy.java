@@ -1,6 +1,6 @@
 package com.c9pay.storeservice.proxy;
 
-import com.c9pay.storeservice.data.dto.certificate.PublicKeyResponse;
+import com.c9pay.storeservice.data.dto.auth.PublicKeyResponse;
 import com.c9pay.storeservice.data.dto.proxy.SerialNumberResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

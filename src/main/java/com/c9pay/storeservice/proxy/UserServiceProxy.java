@@ -11,5 +11,5 @@ import static com.c9pay.storeservice.constant.CookieConstant.AUTHORIZATION_HEADE
 @FeignClient(name = "user-service", url = "${USER_SERVICE_URI:http://localhost}:8083")
 public interface UserServiceProxy {
     @GetMapping("/user-service/api/user/serial-number")
-    public ResponseEntity<?> getSerialNumber(@CookieValue(AUTHORIZATION_HEADER) String token);
+    public ResponseEntity<String> getSerialNumber(@CookieValue(AUTHORIZATION_HEADER) String token);
 }

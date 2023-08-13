@@ -96,12 +96,12 @@ public class JwtFilter implements Filter {
                     .findFirst().map(Cookie::getValue).orElse(null);
 
         if (StringUtils.hasText(bearerToken)) {
-            ResponseEntity serialNumberResponse = userServiceProxy.getSerialNumber(bearerToken);
+            ResponseEntity<String> serialNumberResponse = userServiceProxy.getSerialNumber(bearerToken);
 
             if (serialNumberResponse.getStatusCode().is2xxSuccessful()) {
 
                 return Optional.ofNullable(serialNumberResponse.getBody())
-                        .map((body)->objectMapper.convertValue(body, UUID.class));
+                        .map((uuid)->UUID.fromString(uuid));
             }
         }
 
