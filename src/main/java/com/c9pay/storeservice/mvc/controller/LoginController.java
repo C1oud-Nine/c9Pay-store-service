@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,9 +29,9 @@ public class LoginController {
     private final StoreService storeService;
     private final TokenProvider tokenProvider;
     @PostMapping("/login")
-    public ResponseEntity<StoreDetails> login(HttpSession session, @PathVariable("store-id") long storeId,
+    public ResponseEntity<StoreDetails> login(Principal principal, @PathVariable("store-id") long storeId,
                                               HttpServletRequest request, HttpServletResponse response) {
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString(principal.getName());
         log.debug("userId: {}", userId);
 
         Optional<StoreDetails> storeDetailsOptional = storeService.getAllStoreDetails(userId).stream()

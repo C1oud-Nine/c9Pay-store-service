@@ -1,4 +1,4 @@
-package com.c9pay.storeservice.data.dto.certificate;
+package com.c9pay.storeservice.data.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

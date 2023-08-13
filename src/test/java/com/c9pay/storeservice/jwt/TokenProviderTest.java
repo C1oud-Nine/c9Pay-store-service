@@ -14,7 +14,7 @@ import static org.mockito.Mockito.mock;
 
 class TokenProviderTest {
     final String secretKey = "REVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVA==";
-    final String serviceType = "store";
+    final String serviceType = "user";
     @Test
     void 토큰생성테스트() {
         // given
@@ -46,7 +46,7 @@ class TokenProviderTest {
 
         // when
         sleep(1500);
-        boolean isValid = tokenProvider.validateToken(token, mock(HttpServletRequest.class));
+        boolean isValid = tokenProvider.validateToken(token);
 
         // then
         assertFalse(isValid);

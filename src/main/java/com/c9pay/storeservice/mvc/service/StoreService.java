@@ -27,6 +27,11 @@ public class StoreService {
                 .toList();
     }
 
+    public Optional<UUID> getOwnerId(Long storeId) {
+        Optional<Store> storeOptional = storeRepository.findById(storeId);
+        return storeOptional.map(Store::getUserId);
+    }
+
     public Optional<Store> findStore(Long storeId) {
         return storeRepository.findById(storeId);
     }

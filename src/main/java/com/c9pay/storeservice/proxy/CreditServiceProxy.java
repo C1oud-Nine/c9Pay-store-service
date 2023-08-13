@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name="credit-service", url="${CREDIT_SERVICE_URI:http://localhost}:8082")
 public interface CreditServiceProxy {
     @PostMapping("/credit-service/account/{to}/transfer/{from}")
-    public ResponseEntity<?> transfer(@PathVariable(name= "to") String to,
+    public ResponseEntity transfer(@PathVariable(name= "to") String to,
                                       @PathVariable(name="from") String from,
                                       @RequestBody ChargeAmount chargeAmount);
 }
