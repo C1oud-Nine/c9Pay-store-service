@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,10 +44,10 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ProductDetailList> getProducts(
-            HttpSession session,
+            Principal principal,
             @PathVariable("store-id") Long storeId
     ) {
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString(principal.getName());
         Optional<Store> storeOptional = storeService.findStore(storeId);
 
         // 가게 검증
@@ -61,11 +62,11 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDetailList> addProduct(
-            HttpSession session,
+            Principal principal,
             @PathVariable("store-id") Long storeId,
             @RequestBody ProductForm productForm
     ) {
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString(principal.getName());
         Optional<Store> storeOptional = storeService.findStore(storeId);
 
         // 가게 검증
@@ -82,12 +83,12 @@ public class ProductController {
 
     @PostMapping("/{product-id}")
     public ResponseEntity<ProductDetails> updateProduct(
-            HttpSession session,
+            Principal principal,
             @PathVariable("store-id") Long storeId,
             @PathVariable("product-id") Long productId,
             @RequestBody ProductForm productForm
     ) {
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString(principal.getName());
         Optional<Store> storeOptional = storeService.findStore(storeId);
 
         // 가게 검증
@@ -105,11 +106,11 @@ public class ProductController {
 
     @DeleteMapping("/{product-id}")
     public ResponseEntity<ProductDetailList> deleteProduct(
-            HttpSession session,
+            Principal principal,
             @PathVariable("store-id") Long storeId,
             @PathVariable("product-id") Long productId
     ) {
-        UUID userId = (UUID) session.getAttribute("userId");
+        UUID userId = UUID.fromString(principal.getName());
         Optional<Store> storeOptional = storeService.findStore(storeId);
 
         // 가게 검증

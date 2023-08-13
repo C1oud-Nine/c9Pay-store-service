@@ -1,6 +1,7 @@
 package com.c9pay.storeservice.jwt;
 
 import com.c9pay.storeservice.proxy.UserServiceProxy;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ import static com.c9pay.storeservice.jwt.TokenProvider.SERVICE_TYPE;
 public class JwtFilter implements Filter {
     private final TokenProvider tokenProvider;
     private final UserServiceProxy userServiceProxy;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -94,9 +96,12 @@ public class JwtFilter implements Filter {
                     .findFirst().map(Cookie::getValue).orElse(null);
 
         if (StringUtils.hasText(bearerToken)) {
-            ResponseEntity<?> serialNumber = userServiceProxy.getSerialNumber(bearerToken);
-            if (serialNumber.getStatusCode().is2xxSuccessful()) {
-                return Optional.of((UUID) serialNumber.getBody());
+            ResponseEntity serialNumberResponse = userServiceProxy.getSerialNumber(bearerToken);
+
+            if (serialNumberResponse.getStatusCode().is2xxSuccessful()) {
+
+                return Optional.ofNullable(serialNumberResponse.getBody())
+                        .map((body)->objectMapper.convertValue(body, UUID.class));
             }
         }
 

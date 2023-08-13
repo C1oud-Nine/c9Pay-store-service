@@ -151,7 +151,7 @@ class JwtFilterTest {
         }
 
         @Override
-        public ResponseEntity<?> getSerialNumber(String token) {
+        public ResponseEntity<UUID> getSerialNumber(String token) {
             return ResponseEntity.ok(userSerialNumber);
         }
     }
