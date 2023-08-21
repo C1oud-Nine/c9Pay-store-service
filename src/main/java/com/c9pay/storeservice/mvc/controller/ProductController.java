@@ -78,7 +78,7 @@ public class ProductController {
     }
 
     @PostMapping("/{product-id}")
-    public ResponseEntity<ProductDetails> updateProduct(
+    public ResponseEntity<ProductDetailList> updateProduct(
             Principal principal,
             @PathVariable("store-id") Long storeId,
             @PathVariable("product-id") Long productId,
@@ -95,9 +95,9 @@ public class ProductController {
         Optional<ProductDetails> productDetailsOptional =
                 productService.updateProduct(productId, productForm.getName(), productForm.getPrice());
 
-        return productDetailsOptional
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.badRequest().build());
+        List<ProductDetails> productDetailsList = productService.getProductDetailsByStoreId(storeId);
+
+        return ResponseEntity.ok(new ProductDetailList(productDetailsList));
     }
 
     @DeleteMapping("/{product-id}")
