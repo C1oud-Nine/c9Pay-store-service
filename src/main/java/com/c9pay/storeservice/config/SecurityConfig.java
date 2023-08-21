@@ -12,6 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableWebSecurity
 @Configuration
@@ -21,6 +26,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, TokenProvider tokenProvider,
                                            UserServiceProxy userServiceProxy, ObjectMapper objectMapper) throws Exception {
         HttpSecurity httpSecurity = http
+                .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((s) -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((t) -> t.requestMatchers("/**").permitAll());
@@ -35,5 +41,20 @@ public class SecurityConfig {
                                        @Value("%{jwt.service-type}") String serviceType,
                                        @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
         return new TokenProvider(secret, serviceType, tokenValidityInSeconds);
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOrigin("http://localhost:63342");
+        configuration.addAllowedOrigin("http://www.teamcloudnine.link");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
