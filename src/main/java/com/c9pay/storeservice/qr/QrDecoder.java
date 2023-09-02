@@ -56,9 +56,13 @@ public class QrDecoder {
     }
 
     private void updatePublicKey() {
-        publicKeyOptional = Optional.ofNullable(authServiceProxy.getPublicKey().getBody())
-                .map(PublicKeyResponse::getPublicKey)
-                .map(this::stringToPublicKey);
+        try {
+            publicKeyOptional = Optional.ofNullable(authServiceProxy.getPublicKey().getBody())
+                    .map(PublicKeyResponse::getPublicKey)
+                    .map(this::stringToPublicKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private PublicKey stringToPublicKey(String publicKeyString) {
