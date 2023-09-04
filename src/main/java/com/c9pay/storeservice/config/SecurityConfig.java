@@ -47,8 +47,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("http://localhost:63342");
-        configuration.addAllowedOrigin("http://www.teamcloudnine.link");
+        configuration.addAllowedOrigin("http://web.teamcloudnine.link");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
