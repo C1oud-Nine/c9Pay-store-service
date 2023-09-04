@@ -29,7 +29,7 @@ public class TokenProvider {
     private final Algorithm algorithm;
 
     public TokenProvider(@Value("${jwt.secret}") String secret,
-                         @Value("%{jwt.service-type}") String serviceType,
+                         @Value("${jwt.service-type}") String serviceType,
                          @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
         this.serviceType = serviceType;
         this.tokenValidityInSeconds = tokenValidityInSeconds;
