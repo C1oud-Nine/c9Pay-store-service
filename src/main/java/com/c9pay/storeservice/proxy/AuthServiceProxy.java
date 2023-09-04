@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
 
-@FeignClient(name="auth-service", url="${AUTH_SERVICE_URI:http://localhost}:8081")
+@FeignClient(name="auth-service")
 public interface AuthServiceProxy {
     @PostMapping("/auth-service/serial-number")
     public ResponseEntity<SerialNumberResponse> createSerialNumber();

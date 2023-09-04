@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import static com.c9pay.storeservice.constant.CookieConstant.AUTHORIZATION_HEADER;
 
-@FeignClient(name = "user-service", url = "${USER_SERVICE_URI:http://localhost}:8083")
+@FeignClient(name = "user-service")
 public interface UserServiceProxy {
     @GetMapping("/user-service/api/user/serial-number")
     public ResponseEntity<String> getSerialNumber(@CookieValue(AUTHORIZATION_HEADER) String token);
