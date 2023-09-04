@@ -51,6 +51,8 @@ dependencies {
     implementation 'com.h2database:h2'
     // https://mvnrepository.com/artifact/com.auth0/java-jwt
     implementation 'com.auth0:java-jwt:4.4.0'
+
+    implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
 }
 
 tasks.named('test') {

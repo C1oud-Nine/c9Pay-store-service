@@ -3,6 +3,7 @@ package com.c9pay.storeservice.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.c9pay.storeservice.proxy.UserServiceProxy;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -56,7 +57,7 @@ class JwtFilterTest {
         String storeToken = getStoreToken(storeSub, ip);
         request.setToken(storeToken);
         request.setIp(ip);
-        JwtFilter jwtFilter = new JwtFilter(tokenProvider, mock(TestUserServiceProxy.class));
+        JwtFilter jwtFilter = new JwtFilter(tokenProvider, mock(TestUserServiceProxy.class), new ObjectMapper());
 
         // when
         jwtFilter.doFilter(request, mock(MResponse.class), mock(FilterChain.class));
@@ -77,7 +78,7 @@ class JwtFilterTest {
         UUID expected = UUID.randomUUID();
         TestUserServiceProxy userServiceProxy = new TestUserServiceProxy(expected);
         request.setToken(userToken);
-        JwtFilter jwtFilter = new JwtFilter(tokenProvider, userServiceProxy);
+        JwtFilter jwtFilter = new JwtFilter(tokenProvider, userServiceProxy, new ObjectMapper());
 
         // when
         jwtFilter.doFilter(request, mock(MResponse.class), mock(FilterChain.class));
@@ -151,8 +152,8 @@ class JwtFilterTest {
         }
 
         @Override
-        public ResponseEntity<UUID> getSerialNumber(String token) {
-            return ResponseEntity.ok(userSerialNumber);
+        public ResponseEntity<String> getSerialNumber(String token) {
+            return ResponseEntity.ok(userSerialNumber.toString());
         }
     }
 

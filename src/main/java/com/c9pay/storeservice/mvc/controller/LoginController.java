@@ -1,5 +1,6 @@
 package com.c9pay.storeservice.mvc.controller;
 
+import com.c9pay.storeservice.data.dto.auth.StoreToken;
 import com.c9pay.storeservice.data.dto.store.StoreDetails;
 import com.c9pay.storeservice.jwt.TokenProvider;
 import com.c9pay.storeservice.mvc.service.StoreService;
@@ -29,7 +30,7 @@ public class LoginController {
     private final StoreService storeService;
     private final TokenProvider tokenProvider;
     @PostMapping("/login")
-    public ResponseEntity<StoreDetails> login(Principal principal, @PathVariable("store-id") long storeId,
+    public ResponseEntity<StoreToken> login(Principal principal, @PathVariable("store-id") long storeId,
                                               HttpServletRequest request, HttpServletResponse response) {
         UUID userId = UUID.fromString(principal.getName());
         log.debug("userId: {}", userId);
@@ -41,12 +42,9 @@ public class LoginController {
         // 사용자의 가게가 맞는지 검증
         if (storeDetailsOptional.isPresent()) {
             Authentication authentication = new UsernamePasswordAuthenticationToken(storeId, "");
-            String token = tokenProvider.createToken(authentication, request.getRemoteAddr());
-            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, "Bearer+" + token);
-            cookie.setPath("/");
-            response.addCookie(cookie);
+            String token = "Bearer+" + tokenProvider.createToken(authentication, request.getRemoteAddr());
 
-            return ResponseEntity.ok(storeDetailsOptional.get());
+            return ResponseEntity.ok(new StoreToken(token));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

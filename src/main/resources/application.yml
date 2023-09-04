@@ -34,9 +34,9 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
 
 jwt:
-  service-type: store
-  secret: REVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVERFRkFVTFRERUZBVUxUREVGQVVMVA==
-  token-validity-in-seconds: 86400 # 24시간
+  secret: ENC(0w2i1G7yrJF9gVt9p6iCVfjBTemAJUUclBnioURXDZDjDC/pQ+nYpaeYtJcM/DnuNbQ+wDwR3hQHgrLHL3JueoEqw1W5nizxMG354d4ql+UlG9bg3Smw3Gn4SO3mN96N1maW1tAWHMqlCI1JXlu4MA==)
+  token-validity-in-seconds: ENC(qTkrg7Z4SogjDTOrifYFhA==)
+  service-type: ENC(YiQxZD9T0NVa+VjtOI9v0w==)
 
 
 
@@ -50,3 +50,4 @@ management:
   zipkin:
     tracing:
       endpoint: "http://localhost:9411/api/v2/spans"
+

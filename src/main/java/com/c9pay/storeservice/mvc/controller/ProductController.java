@@ -40,16 +40,8 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ProductDetailList> getProducts(
-            Principal principal,
             @PathVariable("store-id") Long storeId
     ) {
-        UUID userId = UUID.fromString(principal.getName());
-        Optional<Store> storeOptional = storeService.findStore(storeId);
-
-        // 가게 검증
-        if (storeOptional.isEmpty() || !storeOptional.get().getUserId().equals(userId))
-            return ResponseEntity.badRequest().build();
-
         List<ProductDetails> productDetailsList =
                 productService.getProductDetailsByStoreId(storeId);
 
