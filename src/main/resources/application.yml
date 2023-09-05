@@ -70,7 +70,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
       dialect: ENC(AAPl6FCFDCs6z6qVwV8ZlMO1+56LZDlbAlVkBnURwGSqWPY4eHRo/5Iw+lb8iYRszyuE2mbBldU=)
     properties:
       hibernate:
