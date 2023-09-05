@@ -3,17 +3,6 @@ server.port: 8084
 spring:
   application:
     name: store-service
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
 
 logging:
   level:
@@ -51,3 +40,43 @@ management:
     tracing:
       endpoint: "http://localhost:9411/api/v2/spans"
 
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+---
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+      dialect: ENC(AAPl6FCFDCs6z6qVwV8ZlMO1+56LZDlbAlVkBnURwGSqWPY4eHRo/5Iw+lb8iYRszyuE2mbBldU=)
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+    url: ENC(wd08NsYoy+CnJKb72l2e15g/X/6nByJj+hZZYRJ2gfHwW/wn/i0k8lOqac90wskNgQ+xBU7ZywW5Bp8RzfYbBu13tPLxzlIJBBfjoUF4gwDdaShMnP6TZWlosdTEg9u+)
+    username: ENC(kCC9hb6QCjoM11Hj17ArDlM0egpP/lMp)
+    password: ENC(KR14amvV8/xSdwLtsJGM9tgZKnXD6qO7)

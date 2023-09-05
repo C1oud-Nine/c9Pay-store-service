@@ -53,6 +53,8 @@ dependencies {
     implementation 'com.auth0:java-jwt:4.4.0'
 
     implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
+
+    implementation 'org.postgresql:postgresql:42.6.0'
 }
 
 tasks.named('test') {
