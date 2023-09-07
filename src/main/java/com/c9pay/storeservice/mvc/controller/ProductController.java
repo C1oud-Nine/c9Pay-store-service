@@ -1,5 +1,6 @@
 package com.c9pay.storeservice.mvc.controller;
 
+import com.c9pay.storeservice.config.Resilience4JConfig;
 import com.c9pay.storeservice.data.dto.charge.ChargeAmount;
 import com.c9pay.storeservice.data.dto.product.ProductDetailList;
 import com.c9pay.storeservice.data.dto.product.ProductDetails;
@@ -19,6 +20,8 @@ import com.c9pay.storeservice.qr.QrDecoder;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +29,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.c9pay.storeservice.config.Resilience4JConfig.circuitBreakerThrowable;
 
 @Slf4j
 @RestController
@@ -37,6 +42,8 @@ public class ProductController {
     private final StoreService storeService;
     private final CreditServiceProxy creditServiceProxy;
     private final QrDecoder qrDecoder;
+
+    private final CircuitBreakerFactory circuitBreakerFactory;
 
     @GetMapping
     public ResponseEntity<ProductDetailList> getProducts(
@@ -120,7 +127,7 @@ public class ProductController {
     ) {
         ExchangeToken exchangeToken = purchaseInfo.getExchangeToken();
         Optional<UUID> userIdOptional = qrDecoder.getSerialNumber(exchangeToken);
-
+        CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
         try {
             // 구매정보를 바탕으로 결제정보 생성
             List<ProductSaleInfo> productSaleInfoList = purchaseInfo.getPurchaseList().stream()
@@ -140,7 +147,9 @@ public class ProductController {
 
             // 크레딧 서비스에 송금 요청
             // todo 실패 시의 로직 필요
-            ResponseEntity exchangeResponse = creditServiceProxy.transfer(userId.toString(), ownerId.toString(), new ChargeAmount(totalAmount));
+
+            ResponseEntity exchangeResponse = circuitbreaker.run(() -> creditServiceProxy.transfer(userId.toString(), ownerId.toString(), new ChargeAmount(totalAmount)),
+                    throwable -> circuitBreakerThrowable());
 
             if (exchangeResponse.getStatusCode().is2xxSuccessful())
                 return ResponseEntity.ok(new PaymentInfo(productSaleInfoList, totalAmount));
