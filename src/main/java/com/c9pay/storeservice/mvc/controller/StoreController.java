@@ -1,14 +1,18 @@
 package com.c9pay.storeservice.mvc.controller;
 
+import com.c9pay.storeservice.config.Resilience4JConfig;
 import com.c9pay.storeservice.data.dto.proxy.SerialNumberResponse;
 import com.c9pay.storeservice.data.dto.store.StoreDetailList;
 import com.c9pay.storeservice.data.dto.store.StoreDetails;
 import com.c9pay.storeservice.data.dto.store.StoreForm;
 import com.c9pay.storeservice.mvc.service.StoreService;
 import com.c9pay.storeservice.proxy.AuthServiceProxy;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +21,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.c9pay.storeservice.config.Resilience4JConfig.circuitBreakerThrowable;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/store")
 public class StoreController {
     private final StoreService storeService;
+
+    private final CircuitBreakerFactory circuitBreakerFactory;
     private final AuthServiceProxy authServiceProxy;
 
     /**
@@ -34,8 +42,10 @@ public class StoreController {
      */
     @GetMapping
     public ResponseEntity<StoreDetailList> getStores(Principal principal) {
+        CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
         UUID userId = UUID.fromString(principal.getName());
-        List<StoreDetails> storeDetailsList = storeService.getAllStoreDetails(userId);
+        List<StoreDetails> storeDetailsList = circuitbreaker.run(() -> storeService.getAllStoreDetails(userId),
+                throwable -> circuitBreakerThrowable());
         return ResponseEntity.ok(new StoreDetailList(storeDetailsList));
     }
 
@@ -50,7 +60,10 @@ public class StoreController {
      */
     @PostMapping
     public ResponseEntity<StoreDetailList> addStores(Principal principal, @RequestBody StoreForm storeForm) {
-        ResponseEntity<SerialNumberResponse> serialNumberResponse = authServiceProxy.createSerialNumber();
+        CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
+
+        ResponseEntity<SerialNumberResponse> serialNumberResponse = circuitbreaker.run(authServiceProxy::createSerialNumber,
+                throwable -> circuitBreakerThrowable());
         UUID userId = UUID.fromString(principal.getName());
         log.info("UUID: {}", userId);
         Optional<SerialNumberResponse> responseOptional = Optional.ofNullable(serialNumberResponse.getBody());
