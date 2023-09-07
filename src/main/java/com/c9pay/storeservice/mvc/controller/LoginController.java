@@ -4,6 +4,7 @@ import com.c9pay.storeservice.data.dto.auth.StoreToken;
 import com.c9pay.storeservice.data.dto.store.StoreDetails;
 import com.c9pay.storeservice.jwt.TokenProvider;
 import com.c9pay.storeservice.mvc.service.StoreService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,6 +32,7 @@ public class LoginController {
     private final StoreService storeService;
     private final TokenProvider tokenProvider;
     @PostMapping("/login")
+    @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<StoreToken> login(Principal principal, @PathVariable("store-id") long storeId,
                                               HttpServletRequest request, HttpServletResponse response) {
         UUID userId = UUID.fromString(principal.getName());

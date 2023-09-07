@@ -8,6 +8,7 @@ import com.c9pay.storeservice.data.dto.store.StoreForm;
 import com.c9pay.storeservice.mvc.service.StoreService;
 import com.c9pay.storeservice.proxy.AuthServiceProxy;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,7 @@ public class StoreController {
      * @return 사용자의 모든 가게를 응답
      */
     @GetMapping
+    @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<StoreDetailList> getStores(Principal principal) {
         CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
         UUID userId = UUID.fromString(principal.getName());
@@ -59,6 +61,7 @@ public class StoreController {
      * @return 사용자의 모든 가게를 응답
      */
     @PostMapping
+    @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<StoreDetailList> addStores(Principal principal, @RequestBody StoreForm storeForm) {
         CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
 

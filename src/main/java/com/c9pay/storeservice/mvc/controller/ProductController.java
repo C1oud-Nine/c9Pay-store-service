@@ -17,6 +17,7 @@ import com.c9pay.storeservice.mvc.service.ProductService;
 import com.c9pay.storeservice.mvc.service.StoreService;
 import com.c9pay.storeservice.proxy.CreditServiceProxy;
 import com.c9pay.storeservice.qr.QrDecoder;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,7 @@ public class ProductController {
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     @GetMapping
+    @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<ProductDetailList> getProducts(
             @PathVariable("store-id") Long storeId
     ) {
@@ -56,6 +58,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<ProductDetailList> addProduct(
             Principal principal,
             @PathVariable("store-id") Long storeId,
@@ -77,6 +80,7 @@ public class ProductController {
     }
 
     @PostMapping("/{product-id}")
+    @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<ProductDetailList> updateProduct(
             Principal principal,
             @PathVariable("store-id") Long storeId,
@@ -100,6 +104,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{product-id}")
+    @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<ProductDetailList> deleteProduct(
             Principal principal,
             @PathVariable("store-id") Long storeId,
@@ -121,6 +126,7 @@ public class ProductController {
     }
 
     @PostMapping("/sale")
+    @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<PaymentInfo> sellProducts(
             @PathVariable("store-id") long storeId,
             @RequestBody PurchaseInfo purchaseInfo
