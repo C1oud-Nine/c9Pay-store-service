@@ -2,6 +2,7 @@ package com.c9pay.storeservice.mvc.controller;
 
 import com.c9pay.storeservice.data.dto.auth.StoreToken;
 import com.c9pay.storeservice.data.dto.store.StoreDetails;
+import com.c9pay.storeservice.interceptor.GatewayValidation;
 import com.c9pay.storeservice.jwt.TokenProvider;
 import com.c9pay.storeservice.mvc.service.StoreService;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.c9pay.storeservice.constant.CookieConstant.AUTHORIZATION_HEADER;
+import static com.c9pay.storeservice.constant.GatewayConstant.API;
 
 @Slf4j
 @RestController
@@ -33,6 +35,7 @@ public class LoginController {
     private final TokenProvider tokenProvider;
     @PostMapping("/login")
     @RateLimiter(name = "Rate_limiter")
+    @GatewayValidation(API)
     public ResponseEntity<StoreToken> login(Principal principal, @PathVariable("store-id") long storeId,
                                               HttpServletRequest request, HttpServletResponse response) {
         UUID userId = UUID.fromString(principal.getName());

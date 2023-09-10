@@ -12,6 +12,7 @@ import com.c9pay.storeservice.data.dto.sale.PurchaseInfo;
 import com.c9pay.storeservice.data.entity.Product;
 import com.c9pay.storeservice.data.entity.Store;
 import com.c9pay.storeservice.exception.NotExistException;
+import com.c9pay.storeservice.interceptor.GatewayValidation;
 import com.c9pay.storeservice.mvc.repository.ProductRepository;
 import com.c9pay.storeservice.mvc.service.ProductService;
 import com.c9pay.storeservice.mvc.service.StoreService;
@@ -32,6 +33,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.c9pay.storeservice.config.Resilience4JConfig.circuitBreakerThrowable;
+import static com.c9pay.storeservice.constant.GatewayConstant.API;
 
 @Slf4j
 @RestController
@@ -48,6 +50,7 @@ public class ProductController {
 
     @GetMapping
     @RateLimiter(name = "Rate_limiter")
+    @GatewayValidation(API)
     public ResponseEntity<ProductDetailList> getProducts(
             @PathVariable("store-id") Long storeId
     ) {
@@ -59,6 +62,7 @@ public class ProductController {
 
     @PostMapping
     @RateLimiter(name = "Rate_limiter")
+    @GatewayValidation(API)
     public ResponseEntity<ProductDetailList> addProduct(
             Principal principal,
             @PathVariable("store-id") Long storeId,
@@ -81,6 +85,7 @@ public class ProductController {
 
     @PostMapping("/{product-id}")
     @RateLimiter(name = "Rate_limiter")
+    @GatewayValidation(API)
     public ResponseEntity<ProductDetailList> updateProduct(
             Principal principal,
             @PathVariable("store-id") Long storeId,
@@ -105,6 +110,7 @@ public class ProductController {
 
     @DeleteMapping("/{product-id}")
     @RateLimiter(name = "Rate_limiter")
+    @GatewayValidation(API)
     public ResponseEntity<ProductDetailList> deleteProduct(
             Principal principal,
             @PathVariable("store-id") Long storeId,
@@ -127,6 +133,7 @@ public class ProductController {
 
     @PostMapping("/sale")
     @RateLimiter(name = "Rate_limiter")
+    @GatewayValidation(API)
     public ResponseEntity<PaymentInfo> sellProducts(
             @PathVariable("store-id") long storeId,
             @RequestBody PurchaseInfo purchaseInfo

@@ -27,6 +27,9 @@ jwt:
   token-validity-in-seconds: ENC(qTkrg7Z4SogjDTOrifYFhA==)
   service-type: ENC(YiQxZD9T0NVa+VjtOI9v0w==)
 
+symmetric:
+  key: ENC(uQyOMTCgH+o1qbkAInELKGwd7YbRByK/)
+
 
 
 management:
