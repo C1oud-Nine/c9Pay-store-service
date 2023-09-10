@@ -1,10 +1,12 @@
 package com.c9pay.storeservice.mvc.controller;
 
 import com.c9pay.storeservice.config.Resilience4JConfig;
+import com.c9pay.storeservice.constant.GatewayConstant;
 import com.c9pay.storeservice.data.dto.proxy.SerialNumberResponse;
 import com.c9pay.storeservice.data.dto.store.StoreDetailList;
 import com.c9pay.storeservice.data.dto.store.StoreDetails;
 import com.c9pay.storeservice.data.dto.store.StoreForm;
+import com.c9pay.storeservice.interceptor.GatewayValidation;
 import com.c9pay.storeservice.mvc.service.StoreService;
 import com.c9pay.storeservice.proxy.AuthServiceProxy;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
@@ -12,6 +14,7 @@ import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.c9pay.storeservice.config.Resilience4JConfig.circuitBreakerThrowable;
+import static com.c9pay.storeservice.constant.GatewayConstant.API;
 
 @Slf4j
 @RestController
@@ -42,6 +46,7 @@ public class StoreController {
      * @return 사용자의 모든 가게를 응답
      */
     @GetMapping
+    @GatewayValidation(API)
     @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<StoreDetailList> getStores(Principal principal) {
         CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
@@ -61,6 +66,7 @@ public class StoreController {
      * @return 사용자의 모든 가게를 응답
      */
     @PostMapping
+    @GatewayValidation(API)
     @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<StoreDetailList> addStores(Principal principal, @RequestBody StoreForm storeForm) {
         CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
