@@ -49,7 +49,6 @@ public class ProductController {
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     @GetMapping
-    @RateLimiter(name = "Rate_limiter")
     @GatewayValidation(API)
     public ResponseEntity<ProductDetailList> getProducts(
             @PathVariable("store-id") Long storeId

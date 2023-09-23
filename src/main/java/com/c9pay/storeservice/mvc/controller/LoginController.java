@@ -34,7 +34,6 @@ public class LoginController {
     private final StoreService storeService;
     private final TokenProvider tokenProvider;
     @PostMapping("/login")
-    @RateLimiter(name = "Rate_limiter")
     @GatewayValidation(API)
     public ResponseEntity<StoreToken> login(Principal principal, @PathVariable("store-id") long storeId,
                                               HttpServletRequest request, HttpServletResponse response) {

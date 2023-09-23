@@ -47,7 +47,6 @@ public class StoreController {
      */
     @GetMapping
     @GatewayValidation(API)
-    @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<StoreDetailList> getStores(Principal principal) {
         CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
         UUID userId = UUID.fromString(principal.getName());
@@ -67,7 +66,6 @@ public class StoreController {
      */
     @PostMapping
     @GatewayValidation(API)
-    @RateLimiter(name = "Rate_limiter")
     public ResponseEntity<StoreDetailList> addStores(Principal principal, @RequestBody StoreForm storeForm) {
         CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
 
