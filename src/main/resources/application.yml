@@ -22,7 +22,7 @@ eureka:
       defaultZone: http://localhost:8761/eureka
   instance:
     prefer-ip-address: true
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+    instance-id: ${hostname}
 
 jwt:
   secret: ENC(0w2i1G7yrJF9gVt9p6iCVfjBTemAJUUclBnioURXDZDjDC/pQ+nYpaeYtJcM/DnuNbQ+wDwR3hQHgrLHL3JueoEqw1W5nizxMG354d4ql+UlG9bg3Smw3Gn4SO3mN96N1maW1tAWHMqlCI1JXlu4MA==)
