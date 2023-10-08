@@ -12,7 +12,7 @@ logging:
     org.hibernate.type: info
     com.c9pay.storeservice: debug
   pattern:
-    level: "%5p [${spring.application.name},%X{traceId:-},%X{spanId:-}]"
+    level: "${hostname}"
 
 eureka:
   client:
