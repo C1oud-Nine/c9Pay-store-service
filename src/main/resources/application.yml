@@ -82,6 +82,7 @@ spring:
         format_sql: true
 
   datasource:
+    hikari.maximum-pool-size: 3
     url: ENC(wd08NsYoy+CnJKb72l2e15g/X/6nByJj+hZZYRJ2gfHwW/wn/i0k8lOqac90wskNgQ+xBU7ZywW5Bp8RzfYbBu13tPLxzlIJBBfjoUF4gwDdaShMnP6TZWlosdTEg9u+)
     username: ENC(kCC9hb6QCjoM11Hj17ArDlM0egpP/lMp)
     password: ENC(KR14amvV8/xSdwLtsJGM9tgZKnXD6qO7)
