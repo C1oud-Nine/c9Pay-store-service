@@ -4,8 +4,8 @@ server:
 
 spring:
   application:
-    name: store-service:${hostname}
-
+    name: store-service
+    
 logging:
   level:
     org.hibernate.SQL: debug
