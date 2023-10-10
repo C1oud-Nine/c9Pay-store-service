@@ -4,7 +4,7 @@ server:
 
 spring:
   application:
-    name: store-service
+    name: store-service:${hostname}
 
 logging:
   level:
