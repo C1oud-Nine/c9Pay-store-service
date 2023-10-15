@@ -77,7 +77,7 @@ public class StoreController {
 
         return responseOptional
                 .map(SerialNumberResponse::getSerialNumber)
-                .map((id)->storeService.createStore(id, userId, storeForm.getName()))
+                .map((id)->storeService.createStore(id, userId, storeForm.getName(), storeForm.getImageUrl()))
                 .map((store)->storeService.getAllStoreDetails(userId))
                 .map((details)->ResponseEntity.ok(new StoreDetailList(details)))
                 .orElse(ResponseEntity.badRequest().build());

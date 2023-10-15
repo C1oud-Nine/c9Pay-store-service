@@ -20,10 +20,18 @@ public class Store {
     private String name;
     private UUID storeId;
     private UUID userId;
+    private String imageUrl;
 
     public Store(String name, UUID storeId, UUID userId) {
         this.name = name;
         this.storeId = storeId;
         this.userId = userId;
+    }
+
+    public Store(String name, UUID storeId, UUID userId, String imageUrl) {
+        this.name = name;
+        this.storeId = storeId;
+        this.userId = userId;
+        this.imageUrl = imageUrl;
     }
 }

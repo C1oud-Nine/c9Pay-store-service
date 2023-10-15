@@ -12,4 +12,5 @@ import java.util.UUID;
 public class ProductForm {
     private String name;
     private int price;
+    private String imageUrl;
 }

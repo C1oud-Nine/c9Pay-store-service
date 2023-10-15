@@ -21,9 +21,13 @@ public class StoreService {
         return storeRepository.save(new Store(name, storeId, userId));
     }
 
+    public Store createStore(UUID storeId, UUID userId, String name, String imageUrl) {
+        return storeRepository.save(new Store(name, storeId, userId, imageUrl));
+    }
+
     public List<StoreDetails> getAllStoreDetails(UUID userId) {
         return storeRepository.findAllByUserId(userId).stream()
-                .map((s)->new StoreDetails(s.getId(), s.getName()))
+                .map((s)->new StoreDetails(s.getId(), s.getName(), s.getImageUrl()))
                 .toList();
     }
 

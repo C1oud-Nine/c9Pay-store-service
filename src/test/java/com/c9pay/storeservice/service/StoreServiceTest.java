@@ -40,7 +40,7 @@ class StoreServiceTest {
         long expectedIndex = 1L;
         given(storeRepository.save(any())).willAnswer((a)->{
             Store store = (Store) a.getArgument(0);
-            return new Store(expectedIndex, store.getName(), store.getStoreId(), store.getUserId());
+            return new Store(expectedIndex, store.getName(), store.getStoreId(), store.getUserId(), null);
         });
 
         Store expected = new Store("store", storeId, userId);
@@ -60,19 +60,19 @@ class StoreServiceTest {
         // given
         long index = 1L;
         List<Store> stores = List.of(
-                new Store(index, "store" + index++, UUID.randomUUID(), userId),
-                new Store(index, "store" + index++, UUID.randomUUID(), userId),
-                new Store(index, "store" + index++, UUID.randomUUID(), userId),
-                new Store(index, "store" + index++, UUID.randomUUID(), UUID.randomUUID()),
-                new Store(index, "store" + index++, UUID.randomUUID(), UUID.randomUUID()),
-                new Store(index, "store" + index++, UUID.randomUUID(), UUID.randomUUID())
+                new Store(index, "store" + index++, UUID.randomUUID(), userId, null),
+                new Store(index, "store" + index++, UUID.randomUUID(), userId, null),
+                new Store(index, "store" + index++, UUID.randomUUID(), userId, null),
+                new Store(index, "store" + index++, UUID.randomUUID(), UUID.randomUUID(), null),
+                new Store(index, "store" + index++, UUID.randomUUID(), UUID.randomUUID(), null),
+                new Store(index, "store" + index++, UUID.randomUUID(), UUID.randomUUID(), null)
         );
         given(storeRepository.findAllByUserId(any())).willAnswer((a)->{
             UUID uuid = (UUID) a.getArgument(0);
             return stores.stream().filter((s)->uuid.equals(s.getUserId())).toList();
         });
         List<StoreDetails> expected = stores.stream().filter((s)->s.getUserId().equals(userId))
-                .map((s)->new StoreDetails(s.getId(), s.getName())).toList();
+                .map((s)->new StoreDetails(s.getId(), s.getName(), s.getImageUrl())).toList();
 
         // when
         List<StoreDetails> storeDetails = storeService.getAllStoreDetails(userId);

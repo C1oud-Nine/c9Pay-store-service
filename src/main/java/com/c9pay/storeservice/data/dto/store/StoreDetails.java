@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class StoreDetails {
     private Long id;
     private String name;
+    private String imageUrl;
 }

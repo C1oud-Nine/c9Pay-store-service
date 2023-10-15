@@ -75,7 +75,7 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
 
         // 상품 생성
-        productService.saveProduct(productForm.getName(), productForm.getPrice(), storeOptional.get());
+        productService.saveProduct(productForm.getName(), productForm.getPrice(), storeOptional.get(), productForm.getImageUrl());
 
         List<ProductDetails> productDetailsList = productService.getProductDetailsByStoreId(storeId);
 
@@ -100,7 +100,7 @@ public class ProductController {
 
         // 상품 업데이트
         Optional<ProductDetails> productDetailsOptional =
-                productService.updateProduct(productId, productForm.getName(), productForm.getPrice());
+                productService.updateProduct(productId, productForm.getName(), productForm.getPrice(), productForm.getImageUrl());
 
         List<ProductDetails> productDetailsList = productService.getProductDetailsByStoreId(storeId);
 

@@ -19,7 +19,7 @@ public class ProductService {
 
     public List<ProductDetails> getProductDetailsByStoreId(Long storeId) {
         return productRepository.findAllByStoreId(storeId).stream()
-                .map((p)->new ProductDetails(p.getId(), p.getName(), p.getPrice()))
+                .map((p)->new ProductDetails(p.getId(), p.getName(), p.getPrice(), p.getImageUrl()))
                 .toList();
     }
 
@@ -27,12 +27,25 @@ public class ProductService {
         return productRepository.save(new Product(name, price, store));
     }
 
+    public Product saveProduct(String name, int price, Store store, String imageUrl) {
+        return productRepository.save(new Product(name, price, store, imageUrl));
+    }
+
     public Optional<ProductDetails> updateProduct(Long productId, String name, int price) {
         Optional<Product> productOptional = productRepository.findById(productId);
 
         return productOptional.map((p)->{
             p.updateProduct(name, price);
-            return new ProductDetails(p.getId(), p.getName(), p.getPrice());
+            return new ProductDetails(p.getId(), p.getName(), p.getPrice(), p.getImageUrl());
+        });
+    }
+
+    public Optional<ProductDetails> updateProduct(Long productId, String name, int price, String imageUrl) {
+        Optional<Product> productOptional = productRepository.findById(productId);
+
+        return productOptional.map((p)->{
+            p.updateProduct(name, price, imageUrl);
+            return new ProductDetails(p.getId(), p.getName(), p.getPrice(), p.getImageUrl());
         });
     }
 

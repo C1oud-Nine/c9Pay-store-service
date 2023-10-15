@@ -11,4 +11,5 @@ import java.util.UUID;
 @NoArgsConstructor
 public class StoreForm {
     private String name;
+    private String imageUrl;
 }
